@@ -2,7 +2,7 @@
 A Linux driver in Python for the NZXT Hue+
 ## Usage
 ```
-usage: hue.py [-h]
+usage: hue.py [-h] [-c CHANNEL]
               PORT
               {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight}
               ...
@@ -25,6 +25,8 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
+  -c CHANNEL, --channel CHANNEL
+                        The channel, defaults to 1
 ```
 
 ## Warning
