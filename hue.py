@@ -5,6 +5,7 @@ import re
 
 parser = argparse.ArgumentParser(description="Change NZXT Hue+ LEDs")
 parser.add_argument("port", metavar="PORT", type=str, help="The port")
+parser.add_argument("-c", "--channel", type=int, default=1, help="The channel, defaults to 1")
 subparsers = parser.add_subparsers(help="The type of color (fixed, breathing)", dest='command')
 
 parser_fixed = subparsers.add_parser('fixed', help="One single fixed color")
@@ -53,52 +54,52 @@ args = parser.parse_args()
 ser = serial.Serial(args.port, 256000)
 initial = [bytearray([70, 0, 192, 0, 0, 0, 255]), bytearray([75, 2, 192, 0, 0, 0, 0])]
 
-def fixed(ser, color):
+def fixed(ser, channel, color):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
 
-    ser.write(bytearray.fromhex("4B01C0"+color+"00"))
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"C0"+color+"00"))
     out = ser.read()
     print("DONE!")
 
-def breathing(ser, color, speed):
+def breathing(ser, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
 
-    ser.write(bytearray.fromhex("4B01CA"+color[0]+"0"+str(speed)))
-    out = ser.read()
-    last_byte = speed
-    for other_color in color[1:]:
-        last_byte = last_byte+20
-        ser.write(bytearray.fromhex("4B01CA"+other_color+str(last_byte)))
-        out = ser.read()
-
-    print("DONE!")
-
-def fading(ser, color, speed):
-    global initial
-    for array in initial:
-        ser.write(array)
-        out = ser.read()
-        pass
-
-    ser.write(bytearray.fromhex("4B01C1"+color[0]+"0"+str(speed)))
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"CA"+color[0]+"0"+str(speed)))
     out = ser.read()
     last_byte = speed
     for other_color in color[1:]:
         last_byte = last_byte+20
-        ser.write(bytearray.fromhex("4B01C1"+other_color+str(last_byte)))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"CA"+other_color+str(last_byte)))
         out = ser.read()
 
     print("DONE!")
 
-def marquee(ser, color, speed, size, comet, direction):
+def fading(ser, channel, color, speed):
+    global initial
+    for array in initial:
+        ser.write(array)
+        out = ser.read()
+        pass
+
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"C1"+color[0]+"0"+str(speed)))
+    out = ser.read()
+    last_byte = speed
+    for other_color in color[1:]:
+        last_byte = last_byte+20
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C1"+other_color+str(last_byte)))
+        out = ser.read()
+
+    print("DONE!")
+
+def marquee(ser, channel, color, speed, size, comet, direction):
     global initial
     for array in initial:
         ser.write(array)
@@ -112,22 +113,22 @@ def marquee(ser, color, speed, size, comet, direction):
 
     if direction:
         first_option = format(option, '02x')
-        ser.write(bytearray.fromhex("4B01C5"+color[0]+first_option))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C5"+color[0]+first_option))
         out = ser.read()
         second_option = format(option+32, '02x')
-        ser.write(bytearray.fromhex("4B01C5"+color[1]+second_option))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C5"+color[1]+second_option))
         out = ser.read()
     else:
         first_option = format(option, '02x')
-        ser.write(bytearray.fromhex("4B01C4"+color[0]+first_option))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C4"+color[0]+first_option))
         out = ser.read()
         second_option = format(option+32, '02x')
-        ser.write(bytearray.fromhex("4B01C4"+color[1]+second_option))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C4"+color[1]+second_option))
         out = ser.read()
 
     print("DONE!")
 
-def cover_marquee(ser, color, speed, direction):
+def cover_marquee(ser, channel, color, speed, direction):
     global initial
     for array in initial:
         ser.write(array)
@@ -138,47 +139,47 @@ def cover_marquee(ser, color, speed, direction):
 
     if direction:
         first_option = format(option, '02x')
-        ser.write(bytearray.fromhex("4B01C7"+color[0]+first_option))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C7"+color[0]+first_option))
         out = ser.read()
 
         last_byte = option
         for other_color in color[1:]:
             last_byte = last_byte+32
             loop_option = format(last_byte, '02x')
-            ser.write(bytearray.fromhex("4B01C7"+other_color+loop_option))
+            ser.write(bytearray.fromhex("4B0"+str(channel)+"C7"+other_color+loop_option))
             out = ser.read()
     else:
         first_option = format(option, '02x')
-        ser.write(bytearray.fromhex("4B01C6"+color[0]+first_option))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C6"+color[0]+first_option))
         out = ser.read()
 
         last_byte = option
         for other_color in color[1:]:
             last_byte = last_byte+32
             loop_option = format(last_byte, '02x')
-            ser.write(bytearray.fromhex("4B01C6"+other_color+loop_option))
+            ser.write(bytearray.fromhex("4B0"+str(channel)+"C6"+other_color+loop_option))
             out = ser.read()
 
     print("DONE!")
 
-def pulse(ser, color, speed):
+def pulse(ser, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
 
-    ser.write(bytearray.fromhex("4B01C9"+color[0]+"0"+str(speed)))
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"C9"+color[0]+"0"+str(speed)))
     out = ser.read()
     last_byte = speed
     for other_color in color[1:]:
         last_byte = last_byte+20
-        ser.write(bytearray.fromhex("4B01C9"+other_color+str(last_byte)))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C9"+other_color+str(last_byte)))
         out = ser.read()
 
     print("DONE!")
 
-def spectrum(ser, speed, direction):
+def spectrum(ser, channel, speed, direction):
     global initial
     for array in initial:
         ser.write(array)
@@ -186,12 +187,12 @@ def spectrum(ser, speed, direction):
         pass
 
     if direction:
-        ser.write(bytearray.fromhex("4B01C30000FF0"+str(speed)))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C30000FF0"+str(speed)))
     else:
-        ser.write(bytearray.fromhex("4B01C20000FF0"+str(speed)))
+        ser.write(bytearray.fromhex("4B0"+str(channel)+"C20000FF0"+str(speed)))
     out = ser.read()
 
-def alternating(ser, color, speed, size, moving, direction):
+def alternating(ser, channel, color, speed, size, moving, direction):
     global initial
     for array in initial:
         ser.write(array)
@@ -206,39 +207,39 @@ def alternating(ser, color, speed, size, moving, direction):
     else:
         option = size * 8 + speed
 
-    ser.write(bytearray.fromhex("4B01C8"+color[0]+format(option, '02x')))
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"C8"+color[0]+format(option, '02x')))
     out = ser.read()
-    ser.write(bytearray.fromhex("4B01C8"+color[1]+format(option+32, '02x')))
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"C8"+color[1]+format(option+32, '02x')))
     out = ser.read()
 
-def candlelight(ser, color):
+def candlelight(ser, channel, color):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
 
-    ser.write(bytearray.fromhex("4B01CC"+color+"00"))
+    ser.write(bytearray.fromhex("4B0"+str(channel)+"CC"+color+"00"))
     out = ser.read()
 
 if args.command == "fixed":
-    fixed(ser, args.color)
+    fixed(ser, args.channel, args.color)
 elif args.command == 'breathing':
-    breathing(ser, args.colors, args.speed)
+    breathing(ser, args.channel, args.colors, args.speed)
 elif args.command == 'fading':
-    fading(ser, args.colors, args.speed)
+    fading(ser, args.channel, args.colors, args.speed)
 elif args.command == 'marquee':
-    marquee(ser, args.colors, args.speed, args.size, args.comet, args.backwards)
+    marquee(ser, args.channel, args.colors, args.speed, args.size, args.comet, args.backwards)
 elif args.command == 'cover_marquee':
-    cover_marquee(ser, args.colors, args.speed, args.backwards)
+    cover_marquee(ser, args.channel, args.colors, args.speed, args.backwards)
 elif args.command == 'pulse':
-    pulse(ser, args.colors, args.speed)
+    pulse(ser, args.channel, args.colors, args.speed)
 elif args.command == 'spectrum':
-    spectrum(ser, args.speed, args.backwards)
+    spectrum(ser, args.channel, args.speed, args.backwards)
 elif args.command == 'alternating':
-    alternating(ser, args.colors, args.speed, args.size, args.moving, args.backwards)
+    alternating(ser, args.channel, args.colors, args.speed, args.size, args.moving, args.backwards)
 elif args.command == 'candlelight':
-    candlelight(ser, args.color)
+    candlelight(ser, args.channel, args.color)
 else:
     print("INVALID COMMAND")
     sys.exit(-1)
