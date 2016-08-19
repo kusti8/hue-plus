@@ -62,7 +62,7 @@ def fixed(ser, color):
 
     ser.write(bytearray.fromhex("4B01C0"+color+"00"))
     out = ser.read()
-    print "DONE!"
+    print("DONE!")
 
 def breathing(ser, color, speed):
     global initial
@@ -79,7 +79,7 @@ def breathing(ser, color, speed):
         ser.write(bytearray.fromhex("4B01CA"+other_color+str(last_byte)))
         out = ser.read()
 
-    print "DONE!"
+    print("DONE!")
 
 def fading(ser, color, speed):
     global initial
@@ -96,7 +96,7 @@ def fading(ser, color, speed):
         ser.write(bytearray.fromhex("4B01C1"+other_color+str(last_byte)))
         out = ser.read()
 
-    print "DONE!"
+    print("DONE!")
 
 def marquee(ser, color, speed, size, comet, direction):
     global initial
@@ -125,7 +125,7 @@ def marquee(ser, color, speed, size, comet, direction):
         ser.write(bytearray.fromhex("4B01C4"+color[1]+second_option))
         out = ser.read()
 
-    print "DONE!"
+    print("DONE!")
 
 def cover_marquee(ser, color, speed, direction):
     global initial
@@ -159,7 +159,7 @@ def cover_marquee(ser, color, speed, direction):
             ser.write(bytearray.fromhex("4B01C6"+other_color+loop_option))
             out = ser.read()
 
-    print "DONE!"
+    print("DONE!")
 
 def pulse(ser, color, speed):
     global initial
@@ -176,7 +176,7 @@ def pulse(ser, color, speed):
         ser.write(bytearray.fromhex("4B01C9"+other_color+str(last_byte)))
         out = ser.read()
 
-    print "DONE!"
+    print("DONE!")
 
 def spectrum(ser, speed, direction):
     global initial
@@ -240,5 +240,5 @@ elif args.command == 'alternating':
 elif args.command == 'candlelight':
     candlelight(ser, args.color)
 else:
-    print "INVALID COMMAND"
+    print("INVALID COMMAND")
     sys.exit(-1)
