@@ -28,6 +28,8 @@ optional arguments:
   -c CHANNEL, --channel CHANNEL
                         The channel, defaults to 1
 ```
+## Limitations
+No Audio, FPS, CPU temp, GPU temp or Custom, but other than that a perfect replica.
 
 ## Warning
   I (the author) hold no liability for any broken or not working Hue+ by running this script. It is provided as is. It worked for me, but your milage may vary
