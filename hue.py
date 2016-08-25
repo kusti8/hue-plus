@@ -4,7 +4,7 @@ import argparse
 import re
 
 parser = argparse.ArgumentParser(description="Change NZXT Hue+ LEDs")
-parser.add_argument("port", metavar="PORT", type=str, help="The port")
+parser.add_argument("-p", "--port", default="/dev/ttyACM0", type=str, help="The port, defaults to /dev/ttyACM0")
 parser.add_argument("-c", "--channel", type=int, default=1, help="The channel, defaults to 1")
 subparsers = parser.add_subparsers(help="The type of color (fixed, breathing)", dest='command')
 
@@ -15,39 +15,42 @@ parser_breathing = subparsers.add_parser('breathing', help="Breathing through a 
 parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
 parser_breathing.add_argument("colors", type=str, nargs='+', help="Color(s) in hex")
 
-parser_breathing = subparsers.add_parser('fading', help="Fading through a set of colors")
-parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_breathing.add_argument("colors", type=str, nargs='+', help="Color(s) in hex")
+parser_fading = subparsers.add_parser('fading', help="Fading through a set of colors")
+parser_fading.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_fading.add_argument("colors", type=str, nargs='+', help="Color(s) in hex")
 
-parser_breathing = subparsers.add_parser('marquee', help="A strip of color running")
-parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_breathing.add_argument("-c", "--comet", action="store_true", help="Enable comet mode (leave a trail)")
-parser_breathing.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
-parser_breathing.add_argument("size", type=int, help="The size of the group of runners (0=2, 1=3, 2=5, 3=10)")
-parser_breathing.add_argument("colors", type=str, nargs=2, help="Foreground and background colors in hex")
+parser_marquee = subparsers.add_parser('marquee', help="A strip of color running")
+parser_marquee.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_marquee.add_argument("-c", "--comet", action="store_true", help="Enable comet mode (leave a trail)")
+parser_marquee.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
+parser_marquee.add_argument("size", type=int, help="The size of the group of runners (0=2, 1=3, 2=5, 3=10)")
+parser_marquee.add_argument("colors", type=str, nargs=2, help="Foreground and background colors in hex")
 
-parser_breathing = subparsers.add_parser('cover_marquee', help="A strip of color running (multiple colors)")
-parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_breathing.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
-parser_breathing.add_argument("colors", type=str, nargs='+', help="Colors in hex")
+parser_cover_marquee = subparsers.add_parser('cover_marquee', help="A strip of color running (multiple colors)")
+parser_cover_marquee.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_cover_marquee.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
+parser_cover_marquee.add_argument("colors", type=str, nargs='+', help="Colors in hex")
 
-parser_breathing = subparsers.add_parser('pulse', help="Pulsing through a set of colors")
-parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_breathing.add_argument("colors", type=str, nargs='+', help="Color(s) in hex")
+parser_pulse = subparsers.add_parser('pulse', help="Pulsing through a set of colors")
+parser_pulse.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_pulse.add_argument("colors", type=str, nargs='+', help="Color(s) in hex")
 
-parser_breathing = subparsers.add_parser('spectrum', help="Pulsing through a set of colors")
-parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_breathing.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
+parser_spectrum = subparsers.add_parser('spectrum', help="Pulsing through a set of colors")
+parser_spectrum.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_spectrum.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
 
-parser_breathing = subparsers.add_parser('alternating', help="Two alternating colors")
-parser_breathing.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_breathing.add_argument("-m", "--moving", action="store_true", help="Enable movement")
-parser_breathing.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards (requires movement)")
-parser_breathing.add_argument("size", type=int, help="The size of the group of runners (0=2, 1=3, 2=5, 3=10)")
-parser_breathing.add_argument("colors", type=str, nargs=2, help="First and second colors in hex")
+parser_alternating = subparsers.add_parser('alternating', help="Two alternating colors")
+parser_alternating.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_alternating.add_argument("-m", "--moving", action="store_true", help="Enable movement")
+parser_alternating.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards (requires movement)")
+parser_alternating.add_argument("size", type=int, help="The size of the group of runners (0=2, 1=3, 2=5, 3=10)")
+parser_alternating.add_argument("colors", type=str, nargs=2, help="First and second colors in hex")
 
-parser_fixed = subparsers.add_parser('candlelight', help="A flickering color")
-parser_fixed.add_argument("color", type=str, help="Color in hex")
+parser_candlelight = subparsers.add_parser('candlelight', help="A flickering color")
+parser_candlelight.add_argument("color", type=str, help="Color in hex")
+
+parser_power = subparsers.add_parser('power', help="Control power to the channels")
+parser_power.add_argument("state", type=str, help="State (on/off)")
 
 args = parser.parse_args()
 
@@ -222,6 +225,15 @@ def candlelight(ser, channel, color):
     ser.write(bytearray.fromhex("4B0"+str(channel)+"CC"+color+"00"))
     out = ser.read()
 
+def power(ser, channel, state):
+    if state.lower() == 'on':
+        fixed(ser, channel, "FFFFFF")
+    elif state.lower() == 'off':
+        fixed(ser, channel, "000000")
+    else:
+        print("INVALID STATE!")
+        sys.exit(-1)
+
 if args.command == "fixed":
     fixed(ser, args.channel, args.color)
 elif args.command == 'breathing':
@@ -240,6 +252,8 @@ elif args.command == 'alternating':
     alternating(ser, args.channel, args.colors, args.speed, args.size, args.moving, args.backwards)
 elif args.command == 'candlelight':
     candlelight(ser, args.channel, args.color)
+elif args.command == 'power':
+    power(ser, args.channel, args.state)
 else:
     print("INVALID COMMAND")
     sys.exit(-1)
