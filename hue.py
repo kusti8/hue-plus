@@ -2,6 +2,10 @@ import serial
 import sys
 import argparse
 import re
+import os
+
+if os.geteuid() != 0:
+    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
 
 parser = argparse.ArgumentParser(description="Change NZXT Hue+ LEDs")
 parser.add_argument("-p", "--port", default="/dev/ttyACM0", type=str, help="The port, defaults to /dev/ttyACM0")
