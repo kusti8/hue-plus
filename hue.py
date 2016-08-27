@@ -4,6 +4,7 @@ import sys
 import argparse
 import re
 import os
+import picker
 
 if os.geteuid() != 0:
     sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
@@ -11,6 +12,7 @@ if os.geteuid() != 0:
 parser = argparse.ArgumentParser(description="Change NZXT Hue+ LEDs")
 parser.add_argument("-p", "--port", default="/dev/ttyACM0", type=str, help="The port, defaults to /dev/ttyACM0")
 parser.add_argument("-c", "--channel", type=int, default=1, help="The channel, defaults to 1")
+parser.add_argument("-g", "--gui", type=int, default=0, help="How many colors of GUI picker")
 subparsers = parser.add_subparsers(help="The type of color (fixed, breathing)", dest='command')
 
 parser_fixed = subparsers.add_parser('fixed', help="One single fixed color")
@@ -62,23 +64,31 @@ args = parser.parse_args()
 ser = serial.Serial(args.port, 256000)
 initial = [bytearray([70, 0, 192, 0, 0, 0, 255]), bytearray([75, 2, 192, 0, 0, 0, 0])]
 
-def fixed(ser, channel, color):
+def fixed(ser, gui, channel, color):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if gui != 0:
+        color = picker.pick("Color")
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C0"+color+"00"))
     out = ser.read()
     print("DONE!")
 
-def breathing(ser, channel, color, speed):
+def breathing(ser, gui, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if 1 <= gui <= 8:
+        color = []
+        for i in range(gui):
+            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"CA"+color[0]+"0"+str(speed)))
     out = ser.read()
@@ -90,12 +100,17 @@ def breathing(ser, channel, color, speed):
 
     print("DONE!")
 
-def fading(ser, channel, color, speed):
+def fading(ser, gui, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if 1 <= gui <= 8:
+        color = []
+        for i in range(gui):
+            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C1"+color[0]+"0"+str(speed)))
     out = ser.read()
@@ -107,12 +122,18 @@ def fading(ser, channel, color, speed):
 
     print("DONE!")
 
-def marquee(ser, channel, color, speed, size, comet, direction):
+def marquee(ser, gui, channel, color, speed, size, comet, direction):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if gui != 0:
+        color = []
+        gui = 2
+        for i in range(2):
+            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
 
     if comet:
         option = size * 8 + speed | 128
@@ -136,12 +157,17 @@ def marquee(ser, channel, color, speed, size, comet, direction):
 
     print("DONE!")
 
-def cover_marquee(ser, channel, color, speed, direction):
+def cover_marquee(ser, gui, channel, color, speed, direction):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if 1 <= gui <= 8:
+        color = []
+        for i in range(gui):
+            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
 
     option = speed | 0
 
@@ -170,12 +196,17 @@ def cover_marquee(ser, channel, color, speed, direction):
 
     print("DONE!")
 
-def pulse(ser, channel, color, speed):
+def pulse(ser, gui, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if 1 <= gui <= 8:
+        color = []
+        for i in range(gui):
+            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C9"+color[0]+"0"+str(speed)))
     out = ser.read()
@@ -200,12 +231,18 @@ def spectrum(ser, channel, speed, direction):
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C20000FF0"+str(speed)))
     out = ser.read()
 
-def alternating(ser, channel, color, speed, size, moving, direction):
+def alternating(ser, gui, channel, color, speed, size, moving, direction):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if gui != 0:
+        color = []
+        gui = 2
+        for i in range(2):
+            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
 
     if moving:
         if direction:
@@ -220,12 +257,15 @@ def alternating(ser, channel, color, speed, size, moving, direction):
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C8"+color[1]+format(option+32, '02x')))
     out = ser.read()
 
-def candlelight(ser, channel, color):
+def candlelight(ser, gui, channel, color):
     global initial
     for array in initial:
         ser.write(array)
         out = ser.read()
         pass
+
+    if gui != 0:
+        color = picker.pick("Color")
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"CC"+color+"00"))
     out = ser.read()
@@ -240,23 +280,23 @@ def power(ser, channel, state):
         sys.exit(-1)
 
 if args.command == "fixed":
-    fixed(ser, args.channel, args.color)
+    fixed(ser, args.gui, args.channel, args.color)
 elif args.command == 'breathing':
-    breathing(ser, args.channel, args.colors, args.speed)
+    breathing(ser, args.gui, args.channel, args.colors, args.speed)
 elif args.command == 'fading':
-    fading(ser, args.channel, args.colors, args.speed)
+    fading(ser, args.gui, args.channel, args.colors, args.speed)
 elif args.command == 'marquee':
-    marquee(ser, args.channel, args.colors, args.speed, args.size, args.comet, args.backwards)
+    marquee(ser, args.gui, args.channel, args.colors, args.speed, args.size, args.comet, args.backwards)
 elif args.command == 'cover_marquee':
-    cover_marquee(ser, args.channel, args.colors, args.speed, args.backwards)
+    cover_marquee(ser, args.gui, args.channel, args.colors, args.speed, args.backwards)
 elif args.command == 'pulse':
-    pulse(ser, args.channel, args.colors, args.speed)
+    pulse(ser, args.gui, args.channel, args.colors, args.speed)
 elif args.command == 'spectrum':
     spectrum(ser, args.channel, args.speed, args.backwards)
 elif args.command == 'alternating':
-    alternating(ser, args.channel, args.colors, args.speed, args.size, args.moving, args.backwards)
+    alternating(ser, args.gui, args.channel, args.colors, args.speed, args.size, args.moving, args.backwards)
 elif args.command == 'candlelight':
-    candlelight(ser, args.channel, args.color)
+    candlelight(ser, args.gui, args.channel, args.color)
 elif args.command == 'power':
     power(ser, args.channel, args.state)
 else:

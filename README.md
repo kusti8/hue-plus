@@ -2,12 +2,13 @@
 A Linux driver in Python for the NZXT Hue+
 ## Install
 To install it system wide, simply run install.sh as root `sudo ./install.sh`
-Now it will be available as `hue` and `hue-picker` 
+Now it will be available as `hue` and `hue-picker`
+**To use the GUI you must have zenity installed**
 ## Usage
 ```
-usage: hue.py [-h] [-p PORT] [-c CHANNEL]
-              {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,power}
-              ...
+usage: hue [-h] [-p PORT] [-c CHANNEL] [-g GUI]
+           {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,power}
+           ...
 
 Change NZXT Hue+ LEDs
 
@@ -30,9 +31,12 @@ optional arguments:
   -p PORT, --port PORT  The port, defaults to /dev/ttyACM0
   -c CHANNEL, --channel CHANNEL
                         The channel, defaults to 1
+  -g GUI, --gui GUI     How many colors of GUI picker
 ```
 And then to have a simple color picker (you must have zenity installed):
 `hue-picker`
+
+*The default hue.py now includes the color selector, simply set -g to however many colors you want*
 ## Limitations
 No Audio, FPS, CPU temp, GPU temp or Custom, but other than that a perfect replica.
 

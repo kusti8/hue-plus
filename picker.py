@@ -14,11 +14,17 @@ def find_between( s, first, last ):
         return s[start:end]
     except ValueError:
         return ""
-try:
-    out = subprocess.check_output(['zenity', '--color-selection']).decode("utf-8")
-except:
-    exit(-1)
-    
-if out != "":
-    rgb = tuple(map(int, find_between(out, "rgb(", ")").split(',')))
-    print(RGBToHTMLColor(rgb))
+def pick(title):
+    try:
+        out = subprocess.check_output(['zenity', '--title="'+title+'"', '--color-selection']).decode("utf-8")
+    except:
+        exit(-1)
+
+    if out != "":
+        rgb = tuple(map(int, find_between(out, "rgb(", ")").split(',')))
+        return RGBToHTMLColor(rgb)
+    return
+
+if __name__ == "__main__":
+    color = pick("Color")
+    print(color)
