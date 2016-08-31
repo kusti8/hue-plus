@@ -272,9 +272,9 @@ def candlelight(ser, gui, channel, color):
 
 def power(ser, channel, state):
     if state.lower() == 'on':
-        fixed(ser, channel, "FFFFFF")
+        fixed(ser, 0, channel, "FFFFFF")
     elif state.lower() == 'off':
-        fixed(ser, channel, "000000")
+        fixed(ser, 0, channel, "000000")
     else:
         print("INVALID STATE!")
         sys.exit(-1)
