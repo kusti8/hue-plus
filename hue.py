@@ -2,9 +2,9 @@
 import serial
 import sys
 import argparse
-import re
 import os
 import picker
+import previous
 
 if os.geteuid() != 0:
     sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
@@ -64,76 +64,80 @@ args = parser.parse_args()
 ser = serial.Serial(args.port, 256000)
 initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
 
+
 def fixed(ser, gui, channel, color):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if gui != 0:
         color = picker.pick("Color")
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C0"+color+"00"))
-    out = ser.read()
+    _ = ser.read()
     print("DONE!")
+
 
 def breathing(ser, gui, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if 1 <= gui <= 8:
         color = []
         for i in range(gui):
-            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
+            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"CA"+color[0]+"0"+str(speed)))
-    out = ser.read()
+    _ = ser.read()
     last_byte = speed
     for other_color in color[1:]:
         last_byte = last_byte+20
         ser.write(bytearray.fromhex("4B0"+str(channel)+"CA"+other_color+str(last_byte)))
-        out = ser.read()
+        _ = ser.read()
 
     print("DONE!")
+
 
 def fading(ser, gui, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if 1 <= gui <= 8:
         color = []
         for i in range(gui):
-            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
+            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C1"+color[0]+"0"+str(speed)))
-    out = ser.read()
+    _ = ser.read()
     last_byte = speed
     for other_color in color[1:]:
         last_byte = last_byte+20
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C1"+other_color+str(last_byte)))
-        out = ser.read()
+        _ = ser.read()
 
     print("DONE!")
+
 
 def marquee(ser, gui, channel, color, speed, size, comet, direction):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if gui != 0:
         color = []
         gui = 2
         for i in range(2):
-            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
+            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     if comet:
         option = size * 8 + speed | 128
@@ -143,106 +147,110 @@ def marquee(ser, gui, channel, color, speed, size, comet, direction):
     if direction:
         first_option = format(option, '02x')
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C5"+color[0]+first_option))
-        out = ser.read()
+        _ = ser.read()
         second_option = format(option+32, '02x')
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C5"+color[1]+second_option))
-        out = ser.read()
+        _ = ser.read()
     else:
         first_option = format(option, '02x')
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C4"+color[0]+first_option))
-        out = ser.read()
+        _ = ser.read()
         second_option = format(option+32, '02x')
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C4"+color[1]+second_option))
-        out = ser.read()
+        _ = ser.read()
 
     print("DONE!")
+
 
 def cover_marquee(ser, gui, channel, color, speed, direction):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if 1 <= gui <= 8:
         color = []
         for i in range(gui):
-            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
+            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     option = speed | 0
 
     if direction:
         first_option = format(option, '02x')
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C7"+color[0]+first_option))
-        out = ser.read()
+        _ = ser.read()
 
         last_byte = option
         for other_color in color[1:]:
             last_byte = last_byte+32
             loop_option = format(last_byte, '02x')
             ser.write(bytearray.fromhex("4B0"+str(channel)+"C7"+other_color+loop_option))
-            out = ser.read()
+            _ = ser.read()
     else:
         first_option = format(option, '02x')
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C6"+color[0]+first_option))
-        out = ser.read()
+        _ = ser.read()
 
         last_byte = option
         for other_color in color[1:]:
             last_byte = last_byte+32
             loop_option = format(last_byte, '02x')
             ser.write(bytearray.fromhex("4B0"+str(channel)+"C6"+other_color+loop_option))
-            out = ser.read()
+            _ = ser.read()
 
     print("DONE!")
+
 
 def pulse(ser, gui, channel, color, speed):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if 1 <= gui <= 8:
         color = []
         for i in range(gui):
-            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
+            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C9"+color[0]+"0"+str(speed)))
-    out = ser.read()
+    _ = ser.read()
     last_byte = speed
     for other_color in color[1:]:
         last_byte = last_byte+20
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C9"+other_color+str(last_byte)))
-        out = ser.read()
+        _ = ser.read()
 
     print("DONE!")
+
 
 def spectrum(ser, channel, speed, direction):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if direction:
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C30000FF0"+str(speed)))
     else:
         ser.write(bytearray.fromhex("4B0"+str(channel)+"C20000FF0"+str(speed)))
-    out = ser.read()
+    _ = ser.read()
+
 
 def alternating(ser, gui, channel, color, speed, size, moving, direction):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if gui != 0:
         color = []
         gui = 2
         for i in range(2):
-            color.append(picker.pick("Color "+str(i+1)+ " of "+str(gui)))
+            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     if moving:
         if direction:
@@ -253,22 +261,24 @@ def alternating(ser, gui, channel, color, speed, size, moving, direction):
         option = size * 8 + speed
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C8"+color[0]+format(option, '02x')))
-    out = ser.read()
+    _ = ser.read()
     ser.write(bytearray.fromhex("4B0"+str(channel)+"C8"+color[1]+format(option+32, '02x')))
-    out = ser.read()
+    _ = ser.read()
+
 
 def candlelight(ser, gui, channel, color):
     global initial
     for array in initial:
         ser.write(array)
-        out = ser.read()
+        _ = ser.read()
         pass
 
     if gui != 0:
         color = picker.pick("Color")
 
     ser.write(bytearray.fromhex("4B0"+str(channel)+"CC"+color+"00"))
-    out = ser.read()
+    _ = ser.read()
+
 
 def power(ser, channel, state):
     if state.lower() == 'on':
