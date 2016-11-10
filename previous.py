@@ -8,7 +8,7 @@ import shutil
 import pickle
 
 path = '/var/lib/hue-plus/previous.p'
-if os.path.isfile(path):
+if not os.path.isfile(path):
     shutil.copyfile('previous.p', path)
 
 
@@ -16,9 +16,9 @@ def changer_to_two(changer):
     line1 = []
     line2 = []
     for line in changer:
-        line1.append(changer[:3] + '1' + changer[4:])
-        line2.append(changer[:3] + '2' + changer[4:])
-    return (line1, line2)
+        line1.append(line[:3] + '1' + line[4:])
+        line2.append(line[:3] + '2' + line[4:])
+    write(line1, line2)
 
 
 def write(line1, line2):
@@ -30,7 +30,7 @@ def get_colors(channel, changer):
     """Get the previous colors stored so channel 2 stays the same"""
     data = pickle.load(open(path, 'rb'))
     if channel == 0:
-        write(*changer_to_two(changer))
+        changer_to_two(changer)
         return [changer]
     elif channel == 1:
         write(changer, data[1])
