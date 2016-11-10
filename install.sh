@@ -13,6 +13,6 @@ ln -s $(pwd)/hue.py /usr/bin/hue
 ln -s $(pwd)/picker.py /usr/bin/hue-picker
 
 mkdir /var/lib/hue-plus
-touch /var/lib/hue-plus/previous
+cp previous.p /var/lib/hue-plus/previous.p
 
 echo "Now you can run 'hue' or 'hue-picker' from anywhere!"
