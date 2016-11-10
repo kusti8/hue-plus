@@ -11,7 +11,7 @@ if os.geteuid() != 0:
 
 parser = argparse.ArgumentParser(description="Change NZXT Hue+ LEDs")
 parser.add_argument("-p", "--port", default="/dev/ttyACM0", type=str, help="The port, defaults to /dev/ttyACM0")
-parser.add_argument("-c", "--channel", type=int, default=1, help="The channel, defaults to 1")
+parser.add_argument("-c", "--channel", type=int, default=0, help="The channel, defaults to 0 (BOTH)")
 parser.add_argument("-g", "--gui", type=int, default=0, help="How many colors of GUI picker")
 subparsers = parser.add_subparsers(help="The type of color (fixed, breathing)", dest='command')
 
