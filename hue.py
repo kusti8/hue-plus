@@ -62,7 +62,7 @@ parser_power.add_argument("state", type=str, help="State (on/off)")
 args = parser.parse_args()
 
 ser = serial.Serial(args.port, 256000)
-initial = [bytearray([70, 0, 192, 0, 0, 0, 255]), bytearray([75, 2, 192, 0, 0, 0, 0])]
+initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
 
 def fixed(ser, gui, channel, color):
     global initial
