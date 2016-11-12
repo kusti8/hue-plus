@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>801</width>
     <height>600</height>
    </rect>
   </property>
@@ -75,6 +75,19 @@
        <attribute name="title">
         <string>Fixed</string>
        </attribute>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>650</x>
+          <y>340</y>
+          <width>62</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Color</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="breathingTab">
        <attribute name="title">
@@ -127,8 +140,8 @@
    <widget class="QPushButton" name="applyBtn">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>510</y>
+      <x>330</x>
+      <y>500</y>
       <width>101</width>
       <height>41</height>
      </rect>
@@ -143,8 +156,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>21</height>
+     <width>801</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>

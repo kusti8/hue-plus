@@ -1,0 +1,118 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'hue-gui.ui'
+#
+# Created by: PyQt5 UI code generator 5.7
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(800, 600)
+        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.centralwidget.setObjectName("centralwidget")
+        self.channel1Check = QtWidgets.QCheckBox(self.centralwidget)
+        self.channel1Check.setGeometry(QtCore.QRect(10, 10, 70, 17))
+        self.channel1Check.setObjectName("channel1Check")
+        self.channel2Check = QtWidgets.QCheckBox(self.centralwidget)
+        self.channel2Check.setGeometry(QtCore.QRect(10, 30, 70, 17))
+        self.channel2Check.setObjectName("channel2Check")
+        self.modeWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.modeWidget.setGeometry(QtCore.QRect(10, 50, 781, 451))
+        self.modeWidget.setObjectName("modeWidget")
+        self.presetTab = QtWidgets.QWidget()
+        self.presetTab.setObjectName("presetTab")
+        self.presetModeWidget = QtWidgets.QTabWidget(self.presetTab)
+        self.presetModeWidget.setGeometry(QtCore.QRect(6, 9, 761, 411))
+        self.presetModeWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.presetModeWidget.setObjectName("presetModeWidget")
+        self.fixedTab = QtWidgets.QWidget()
+        self.fixedTab.setObjectName("fixedTab")
+        self.colorPickerFixed = QwwHueSatRadialPicker(self.fixedTab)
+        self.colorPickerFixed.setGeometry(QtCore.QRect(470, 10, 281, 281))
+        self.colorPickerFixed.setColor(QtGui.QColor(255, 0, 0))
+        self.colorPickerFixed.setObjectName("colorPickerFixed")
+        self.label = QtWidgets.QLabel(self.fixedTab)
+        self.label.setGeometry(QtCore.QRect(580, 330, 62, 20))
+        self.label.setObjectName("label")
+        self.presetModeWidget.addTab(self.fixedTab, "")
+        self.breathingTab = QtWidgets.QWidget()
+        self.breathingTab.setObjectName("breathingTab")
+        self.presetModeWidget.addTab(self.breathingTab, "")
+        self.fadingTab = QtWidgets.QWidget()
+        self.fadingTab.setObjectName("fadingTab")
+        self.presetModeWidget.addTab(self.fadingTab, "")
+        self.marqueeTab = QtWidgets.QWidget()
+        self.marqueeTab.setObjectName("marqueeTab")
+        self.presetModeWidget.addTab(self.marqueeTab, "")
+        self.coverMarqueeTab = QtWidgets.QWidget()
+        self.coverMarqueeTab.setObjectName("coverMarqueeTab")
+        self.presetModeWidget.addTab(self.coverMarqueeTab, "")
+        self.pulseTab = QtWidgets.QWidget()
+        self.pulseTab.setObjectName("pulseTab")
+        self.presetModeWidget.addTab(self.pulseTab, "")
+        self.spectrumTab = QtWidgets.QWidget()
+        self.spectrumTab.setObjectName("spectrumTab")
+        self.presetModeWidget.addTab(self.spectrumTab, "")
+        self.alternatingTab = QtWidgets.QWidget()
+        self.alternatingTab.setObjectName("alternatingTab")
+        self.presetModeWidget.addTab(self.alternatingTab, "")
+        self.candleTab = QtWidgets.QWidget()
+        self.candleTab.setObjectName("candleTab")
+        self.presetModeWidget.addTab(self.candleTab, "")
+        self.wingsTab = QtWidgets.QWidget()
+        self.wingsTab.setObjectName("wingsTab")
+        self.presetModeWidget.addTab(self.wingsTab, "")
+        self.modeWidget.addTab(self.presetTab, "")
+        self.applyBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.applyBtn.setGeometry(QtCore.QRect(330, 500, 101, 41))
+        self.applyBtn.setObjectName("applyBtn")
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 25))
+        self.menubar.setObjectName("menubar")
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(MainWindow)
+        self.statusbar.setObjectName("statusbar")
+        MainWindow.setStatusBar(self.statusbar)
+
+        self.retranslateUi(MainWindow)
+        self.modeWidget.setCurrentIndex(0)
+        self.presetModeWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        MainWindow.setTabOrder(self.channel1Check, self.channel2Check)
+        MainWindow.setTabOrder(self.channel2Check, self.modeWidget)
+
+    def retranslateUi(self, MainWindow):
+        _translate = QtCore.QCoreApplication.translate
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.channel1Check.setText(_translate("MainWindow", "Channel 1"))
+        self.channel2Check.setText(_translate("MainWindow", "Channel 2"))
+        self.label.setText(_translate("MainWindow", "Color"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.fixedTab), _translate("MainWindow", "Fixed"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.breathingTab), _translate("MainWindow", "Breathing"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.fadingTab), _translate("MainWindow", "Fading"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.marqueeTab), _translate("MainWindow", "Marquee"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.coverMarqueeTab), _translate("MainWindow", "Covering Marquee"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.pulseTab), _translate("MainWindow", "Pulse"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.spectrumTab), _translate("MainWindow", "Spectrum"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.alternatingTab), _translate("MainWindow", "Alternating"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.candleTab), _translate("MainWindow", "Candle"))
+        self.presetModeWidget.setTabText(self.presetModeWidget.indexOf(self.wingsTab), _translate("MainWindow", "Wings"))
+        self.modeWidget.setTabText(self.modeWidget.indexOf(self.presetTab), _translate("MainWindow", "Preset"))
+        self.applyBtn.setText(_translate("MainWindow", "Apply"))
+
+from qwwhuesatradialpicker import QwwHueSatRadialPicker
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
+
