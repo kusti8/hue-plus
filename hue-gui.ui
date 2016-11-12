@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QCheckBox" name="channel1Check">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Channel 1</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="channel2Check">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Channel 2</string>
+    </property>
+   </widget>
+   <widget class="QTabWidget" name="modeWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>781</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>0</number>
+    </property>
+    <widget class="QWidget" name="presetTab">
+     <attribute name="title">
+      <string>Preset</string>
+     </attribute>
+     <widget class="QTabWidget" name="presetModeWidget">
+      <property name="geometry">
+       <rect>
+        <x>6</x>
+        <y>9</y>
+        <width>761</width>
+        <height>411</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="fixedTab">
+       <attribute name="title">
+        <string>Fixed</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="breathingTab">
+       <attribute name="title">
+        <string>Breathing</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="fadingTab">
+       <attribute name="title">
+        <string>Fading</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="marqueeTab">
+       <attribute name="title">
+        <string>Marquee</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="coverMarqueeTab">
+       <attribute name="title">
+        <string>Covering Marquee</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="pulseTab">
+       <attribute name="title">
+        <string>Pulse</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="spectrumTab">
+       <attribute name="title">
+        <string>Spectrum</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="alternatingTab">
+       <attribute name="title">
+        <string>Alternating</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="candleTab">
+       <attribute name="title">
+        <string>Candle</string>
+       </attribute>
+      </widget>
+      <widget class="QWidget" name="wingsTab">
+       <attribute name="title">
+        <string>Wings</string>
+       </attribute>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="applyBtn">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>510</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Apply</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <tabstops>
+  <tabstop>channel1Check</tabstop>
+  <tabstop>channel2Check</tabstop>
+  <tabstop>modeWidget</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
