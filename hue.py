@@ -62,8 +62,12 @@ parser_power.add_argument("state", type=str, help="State (on/off)")
 args = parser.parse_args()
 
 ser = serial.Serial(args.port, 256000)
-initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
 
+def init(ser):
+    initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
+    for array in initial:
+        ser.write(array)
+        ser.read()
 
 def write(outputs):
     for channel in outputs:
@@ -73,11 +77,7 @@ def write(outputs):
 
 
 def fixed(ser, gui, channel, color):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if gui != 0:
         color = picker.pick("Color")
@@ -87,11 +87,7 @@ def fixed(ser, gui, channel, color):
 
 
 def breathing(ser, gui, channel, color, speed):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if 1 <= gui <= 8:
         color = []
@@ -109,11 +105,7 @@ def breathing(ser, gui, channel, color, speed):
 
 
 def fading(ser, gui, channel, color, speed):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if 1 <= gui <= 8:
         color = []
@@ -131,11 +123,7 @@ def fading(ser, gui, channel, color, speed):
 
 
 def marquee(ser, gui, channel, color, speed, size, comet, direction):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if gui != 0:
         color = []
@@ -164,11 +152,7 @@ def marquee(ser, gui, channel, color, speed, size, comet, direction):
 
 
 def cover_marquee(ser, gui, channel, color, speed, direction):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if 1 <= gui <= 8:
         color = []
@@ -201,11 +185,7 @@ def cover_marquee(ser, gui, channel, color, speed, direction):
 
 
 def pulse(ser, gui, channel, color, speed):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if 1 <= gui <= 8:
         color = []
@@ -223,11 +203,7 @@ def pulse(ser, gui, channel, color, speed):
 
 
 def spectrum(ser, channel, speed, direction):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if direction:
         lines = ["4B0"+str(channel)+"C30000FF0"+str(speed)]
@@ -239,11 +215,7 @@ def spectrum(ser, channel, speed, direction):
 
 
 def alternating(ser, gui, channel, color, speed, size, moving, direction):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if gui != 0:
         color = []
@@ -267,11 +239,7 @@ def alternating(ser, gui, channel, color, speed, size, moving, direction):
 
 
 def candlelight(ser, gui, channel, color):
-    global initial
-    for array in initial:
-        ser.write(array)
-        ser.read()
-        pass
+    init(ser)
 
     if gui != 0:
         color = picker.pick("Color")
