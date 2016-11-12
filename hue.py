@@ -56,6 +56,10 @@ parser_alternating.add_argument("colors", type=str, nargs=2, help="First and sec
 parser_candlelight = subparsers.add_parser('candlelight', help="A flickering color")
 parser_candlelight.add_argument("color", type=str, help="Color in hex")
 
+parser_wings = subparsers.add_parser('wings', help="Strips of light meeting in the center")
+parser_wings.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+parser_wings.add_argument("color", type=str, help="Color in hex")
+
 parser_power = subparsers.add_parser('power', help="Control power to the channels")
 parser_power.add_argument("state", type=str, help="State (on/off)")
 
@@ -63,11 +67,16 @@ args = parser.parse_args()
 
 ser = serial.Serial(args.port, 256000)
 
+def strips_info(ser, channel):
+    ser.write(bytearray.fromhex("8D0" + str(channel)))
+    return int(ser.read(ser.in_waiting).encode('hex')[-1])*10
+
 def init(ser):
     initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
     for array in initial:
         ser.write(array)
         ser.read()
+
 
 def write(outputs):
     for channel in outputs:
@@ -250,6 +259,20 @@ def candlelight(ser, gui, channel, color):
     write(outputs)
 
 
+def wings(ser, gui, channel, color, speed):
+    init(ser)
+
+    if gui != 0:
+        color = picker.pick("Color")
+
+    color_line = color[2:4] + color[:2] + color[4:]
+    strips = strips_info(ser, channel)
+    lines = ['4B0' + str(channel) + '0C000' + str(speed) + color_line*strips + '00'*(40-strips)]
+
+    outputs = previous.get_colors(channel, lines)
+    write(outputs)
+
+
 def power(ser, channel, state):
     if state.lower() == 'on':
         fixed(ser, 0, channel, "FFFFFF")
@@ -277,6 +300,8 @@ elif args.command == 'alternating':
     alternating(ser, args.gui, args.channel, args.colors, args.speed, args.size, args.moving, args.backwards)
 elif args.command == 'candlelight':
     candlelight(ser, args.gui, args.channel, args.color)
+elif args.command == 'wings':
+    wings(ser, args.gui, args.channel, args.color, args.speed)
 elif args.command == 'power':
     power(ser, args.channel, args.state)
 else:
