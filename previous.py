@@ -19,6 +19,7 @@ def changer_to_two(changer):
         line1.append(line[:3] + '1' + line[4:])
         line2.append(line[:3] + '2' + line[4:])
     write(line1, line2)
+    return [line1, line2]
 
 
 def write(line1, line2):
@@ -30,8 +31,7 @@ def get_colors(channel, changer):
     """Get the previous colors stored so channel 2 stays the same"""
     data = pickle.load(open(path, 'rb'))
     if channel == 0:
-        changer_to_two(changer)
-        return [changer]
+        return changer_to_two(changer)
     elif channel == 1:
         write(changer, data[1])
         return [changer, data[1]]  # Return the original one channel and the previous second channel

@@ -67,9 +67,38 @@ args = parser.parse_args()
 
 ser = serial.Serial(args.port, 256000)
 
+
+def create_command(ser, channel, colors, mode, direction, option, group, speed):
+    commands = []
+    modes = {
+        "fixed": 0,
+        "breathing": 7,
+        "fading": 1,
+        "marquee": 3,
+        "cover_marquee": 4,
+        "pulse": 6,
+        "spectrum": 2,
+        "candle": 9,
+        "wings": 12
+    }
+
+    for i, color in enumerate(colors):
+        command = []
+        command.append(75)
+        command.append(channel)
+        command.append(modes[mode])
+        command.append(direction << 4 | option << 3 | strips_info(ser, channel)-1)
+        command.append(i << 5 | group << 3 | speed)
+        command.append((color[2:4]+color[:2]+color[4:])*40)
+        command = ''.join(format(x, '02x') for x in command).upper()
+        commands.append(command)
+    return commands
+
+
 def strips_info(ser, channel):
     ser.write(bytearray.fromhex("8D0" + str(channel)))
-    return int(ser.read(ser.in_waiting).encode('hex')[-1])*10
+    return int(ser.read(ser.in_waiting).encode('hex')[-1])
+
 
 def init(ser):
     initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
@@ -91,7 +120,7 @@ def fixed(ser, gui, channel, color):
     if gui != 0:
         color = picker.pick("Color")
 
-    outputs = previous.get_colors(channel, ["4B0"+str(channel)+"C0"+color+"00"])
+    outputs = previous.get_colors(channel, create_command())
     write(outputs)
 
 
