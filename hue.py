@@ -28,14 +28,13 @@ parser_fading.add_argument("colors", type=str, nargs='+', help="Color(s) in hex"
 
 parser_marquee = subparsers.add_parser('marquee', help="A strip of color running")
 parser_marquee.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_marquee.add_argument("-c", "--comet", action="store_true", help="Enable comet mode (leave a trail)")
-parser_marquee.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
+parser_marquee.add_argument("-b", "--backwards", action="store_const", const=1, help="Enable going backwards")
 parser_marquee.add_argument("size", type=int, help="The size of the group of runners (0=2, 1=3, 2=5, 3=10)")
-parser_marquee.add_argument("colors", type=str, nargs=2, help="Foreground and background colors in hex")
+parser_marquee.add_argument("color", type=str, help="Foreground color in hex")
 
 parser_cover_marquee = subparsers.add_parser('cover_marquee', help="A strip of color running (multiple colors)")
 parser_cover_marquee.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_cover_marquee.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
+parser_cover_marquee.add_argument("-b", "--backwards", action="store_const", const=1, help="Enable going backwards")
 parser_cover_marquee.add_argument("colors", type=str, nargs='+', help="Colors in hex")
 
 parser_pulse = subparsers.add_parser('pulse', help="Pulsing through a set of colors")
@@ -44,12 +43,12 @@ parser_pulse.add_argument("colors", type=str, nargs='+', help="Color(s) in hex")
 
 parser_spectrum = subparsers.add_parser('spectrum', help="Pulsing through a set of colors")
 parser_spectrum.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
-parser_spectrum.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards")
+parser_spectrum.add_argument("-b", "--backwards", action="store_const", const=1, help="Enable going backwards")
 
 parser_alternating = subparsers.add_parser('alternating', help="Two alternating colors")
 parser_alternating.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
 parser_alternating.add_argument("-m", "--moving", action="store_true", help="Enable movement")
-parser_alternating.add_argument("-b", "--backwards", action="store_true", help="Enable going backwards (requires movement)")
+parser_alternating.add_argument("-b", "--backwards", action="store_const", const=1, help="Enable going backwards (requires movement)")
 parser_alternating.add_argument("size", type=int, help="The size of the group of runners (0=2, 1=3, 2=5, 3=10)")
 parser_alternating.add_argument("colors", type=str, nargs=2, help="First and second colors in hex")
 
@@ -120,7 +119,8 @@ def fixed(ser, gui, channel, color):
     if gui != 0:
         color = picker.pick("Color")
 
-    outputs = previous.get_colors(channel, create_command())
+    command = create_command(ser, channel, color, "fixed", 0, 0, 0, 2)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -132,13 +132,9 @@ def breathing(ser, gui, channel, color, speed):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    lines = ["4B0"+str(channel)+"CA"+color[0]+"0"+str(speed)]
-    last_byte = speed
-    for other_color in color[1:]:
-        last_byte = last_byte+20
-        lines.append("4B0"+str(channel)+"CA"+other_color+str(last_byte))
+    command = create_command(ser, channel, color, "breathing", 0, 0, 0, speed)
 
-    outputs = previous.get_colors(channel, lines)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -150,42 +146,23 @@ def fading(ser, gui, channel, color, speed):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    lines = ["4B0"+str(channel)+"C1"+color[0]+"0"+str(speed)]
-    last_byte = speed
-    for other_color in color[1:]:
-        last_byte = last_byte+20
-        lines.append("4B0"+str(channel)+"C1"+other_color+str(last_byte))
+    command = create_command(ser, channel, color, "fading", 0, 0, 0, speed)
 
-    outputs = previous.get_colors(channel, lines)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
-def marquee(ser, gui, channel, color, speed, size, comet, direction):
+def marquee(ser, gui, channel, color, speed, size, direction):
     init(ser)
 
     if gui != 0:
         color = []
-        gui = 2
-        for i in range(2):
+        gui = 1
+        for i in range(1):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    if comet:
-        option = size * 8 + speed | 128
-    else:
-        option = size * 8 + speed | 0
-
-    if direction:
-        first_option = format(option, '02x')
-        lines = ["4B0"+str(channel)+"C5"+color[0]+first_option]
-        second_option = format(option+32, '02x')
-        lines.append("4B0"+str(channel)+"C5"+color[1]+second_option)
-    else:
-        first_option = format(option, '02x')
-        lines = ["4B0"+str(channel)+"C4"+color[0]+first_option]
-        second_option = format(option+32, '02x')
-        lines.append("4B0"+str(channel)+"C4"+color[1]+second_option)
-
-    outputs = previous.get_colors(channel, lines)
+    command = create_command(ser, channel, color, "marquee", direction, 0, size, speed)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -197,28 +174,8 @@ def cover_marquee(ser, gui, channel, color, speed, direction):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    option = speed | 0
-
-    if direction:
-        first_option = format(option, '02x')
-        lines = ["4B0"+str(channel)+"C7"+color[0]+first_option]
-
-        last_byte = option
-        for other_color in color[1:]:
-            last_byte = last_byte+32
-            loop_option = format(last_byte, '02x')
-            lines.append("4B0"+str(channel)+"C7"+other_color+loop_option)
-    else:
-        first_option = format(option, '02x')
-        lines = ["4B0"+str(channel)+"C6"+color[0]+first_option]
-
-        last_byte = option
-        for other_color in color[1:]:
-            last_byte = last_byte+32
-            loop_option = format(last_byte, '02x')
-            lines.append("4B0"+str(channel)+"C6"+other_color+loop_option)
-
-    outputs = previous.get_colors(channel, lines)
+    command = create_command(ser, channel, color, "cover_marquee", direction, 0, 0, speed)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -230,25 +187,17 @@ def pulse(ser, gui, channel, color, speed):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    lines = ["4B0"+str(channel)+"C9"+color[0]+"0"+str(speed)]
-    last_byte = speed
-    for other_color in color[1:]:
-        last_byte = last_byte+20
-        lines.append("4B0"+str(channel)+"C9"+other_color+str(last_byte))
-
-    outputs = previous.get_colors(channel, lines)
+    command = create_command(ser, channel, color, "pulse", 0, 0, 0, speed)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
 def spectrum(ser, channel, speed, direction):
     init(ser)
 
-    if direction:
-        lines = ["4B0"+str(channel)+"C30000FF0"+str(speed)]
-    else:
-        lines = ["4B0"+str(channel)+"C20000FF0"+str(speed)]
+    command = create_command(ser, channel, "0000FF", "spectrum", direction, 0, 0, speed)
 
-    outputs = previous.get_colors(channel, lines)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -262,17 +211,12 @@ def alternating(ser, gui, channel, color, speed, size, moving, direction):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
     if moving:
-        if direction:
-            option = size * 8 + speed | 192
-        else:
-            option = size * 8 + speed | 128
+        option = 1
     else:
-        option = size * 8 + speed
+        option = 0
 
-    lines = ["4B0"+str(channel)+"C8"+color[0]+format(option, '02x')]
-    lines.append("4B0"+str(channel)+"C8"+color[1]+format(option+32, '02x'))
-
-    outputs = previous.get_colors(channel, lines)
+    command = create_command(ser, channel, color, "alternating", direction, option, size, speed)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -282,9 +226,9 @@ def candlelight(ser, gui, channel, color):
     if gui != 0:
         color = picker.pick("Color")
 
-    lines = ["4B0"+str(channel)+"CC"+color+"00"]
+    command = create_command(ser, channel, color, "candlelight", 0, 0, 0, 0)
 
-    outputs = previous.get_colors(channel, lines)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -294,11 +238,8 @@ def wings(ser, gui, channel, color, speed):
     if gui != 0:
         color = picker.pick("Color")
 
-    color_line = color[2:4] + color[:2] + color[4:]
-    strips = strips_info(ser, channel)
-    lines = ['4B0' + str(channel) + '0C000' + str(speed) + color_line*strips + '00'*(40-strips)]
-
-    outputs = previous.get_colors(channel, lines)
+    command = create_command(ser, channel, color, "wings", 0, 0, 0, speed)
+    outputs = previous.get_colors(channel, command)
     write(outputs)
 
 
@@ -318,7 +259,7 @@ elif args.command == 'breathing':
 elif args.command == 'fading':
     fading(ser, args.gui, args.channel, args.colors, args.speed)
 elif args.command == 'marquee':
-    marquee(ser, args.gui, args.channel, args.colors, args.speed, args.size, args.comet, args.backwards)
+    marquee(ser, args.gui, args.channel, args.colors, args.speed, args.size, args.backwards)
 elif args.command == 'cover_marquee':
     cover_marquee(ser, args.gui, args.channel, args.colors, args.speed, args.backwards)
 elif args.command == 'pulse':
