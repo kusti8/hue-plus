@@ -96,7 +96,7 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
 
 def strips_info(ser, channel):
     ser.write(bytearray.fromhex("8D0" + str(channel)))
-    return int(ser.read(ser.in_waiting).encode('hex')[-1])
+    return int(ser.read(ser.in_waiting).decode("utf-8")[-1])
 
 
 def init(ser):
@@ -114,13 +114,13 @@ def write(outputs):
 
 
 def fixed(ser, gui, channel, color):
-    init(ser)
 
     if gui != 0:
         color = picker.pick("Color")
 
     command = create_command(ser, channel, color, "fixed", 0, 0, 0, 2)
     outputs = previous.get_colors(channel, command)
+    init(ser)
     write(outputs)
 
 
