@@ -69,6 +69,7 @@ ser = serial.Serial(args.port, 256000)
 
 def create_command(ser, channel, colors, mode, direction, option, group, speed):
     commands = []
+    channel_commands = []
     modes = {
         "fixed": 0,
         "breathing": 7,
@@ -81,17 +82,24 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
         "wings": 12
     }
 
-    for i, color in enumerate(colors):
-        command = []
-        command.append(75)
-        command.append(channel)
-        command.append(modes[mode])
-        command.append(direction << 4 | option << 3 | strips_info(ser, channel)-1)
-        command.append(i << 5 | group << 3 | speed)
-        command.append((color[2:4]+color[:2]+color[4:])*40)
-        command = ''.join(format(x, '02x') for x in command).upper()
-        commands.append(command)
-    return commands
+    if channel == 0:
+        channels = [1, 2]
+    else:
+        channels = [channel]
+
+    for channel in channels:
+        for i, color in enumerate(colors):
+            command = []
+            command.append(75)
+            command.append(channel)
+            command.append(modes[mode])
+            command.append(direction << 4 | option << 3 | strips_info(ser, channel)-1)
+            command.append(i << 5 | group << 3 | speed)
+            command.append((color[2:4]+color[:2]+color[4:])*40)
+            command = ''.join(format(x, '02x') for x in command).upper()
+            commands.append(command)
+        channel_commands.append(commands)
+    return channel_commands
 
 
 def strips_info(ser, channel):
