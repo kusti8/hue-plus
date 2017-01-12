@@ -79,7 +79,7 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
         "cover_marquee": 4,
         "pulse": 6,
         "spectrum": 2,
-        "candle": 9,
+        "candlelight": 9,
         "wings": 12
     }
 
@@ -90,21 +90,23 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
     else:
         channels = [channel]
 
-    for channel in channels:
+    for channela in channels:
         for i, color in enumerate(colors):
             command = []
             command.append(75)
             command.append(channel)
             command.append(modes[mode])
-            command.append(direction << 4 | option << 3 | strips[channel])
+            command.append(direction << 4 | option << 3 | strips[channela])
             command.append(i << 5 | group << 3 | speed)
             for z in range(40):
                 command.append(int(color[2:4], 16))
                 command.append(int(color[:2], 16))
                 command.append(int(color[4:], 16))
             command = bytearray(command)
+            #print(command)
             commands.append(command)
         channel_commands.append(commands)
+    print(channel_commands)
     return channel_commands
 
 
@@ -136,6 +138,7 @@ def fixed(ser, gui, channel, color):
 
     command = create_command(ser, channel, [color], "fixed", 0, 0, 0, 2)
     outputs = previous.get_colors(channel, command)
+    #print(outputs)
     init(ser)
     write(outputs)
 

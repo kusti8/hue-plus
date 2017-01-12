@@ -31,13 +31,14 @@ def get_colors(channel, changer):
     """Get the previous colors stored so channel 2 stays the same"""
     data = pickle.load(open(path, 'rb'))
     if channel == 0:
+        #print(changer)
         write(changer[0], changer[1])
         return [changer[0], changer[1]]
     elif channel == 1:
-        write(changer, data[1])
+        write(changer[0], data[1])
         return [changer[0], data[1]]  # Return the original one channel and the previous second channel
     elif channel == 2:
-        write(data[0], changer)
+        write(data[0], changer[1])
         return [data[0], changer[0]]
 
 
