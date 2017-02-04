@@ -115,7 +115,6 @@ def strips_info(ser, channel):
     ser.write(out)
     time.sleep(1)
     r = int(ser.read(ser.in_waiting).hex()[-1])
-    print('Strip %d' % r)
     if r <= 0:
         r = 1
     return r
