@@ -114,7 +114,11 @@ def strips_info(ser, channel):
     out = bytearray.fromhex("8D0" + str(channel))
     ser.write(out)
     time.sleep(1)
-    return int(ser.read(ser.in_waiting).hex()[-1])
+    r = int(ser.read(ser.in_waiting).hex()[-1])
+    print('Strip %d' % r)
+    if r <= 0:
+        r = 1
+    return r
 
 
 def init(ser):
