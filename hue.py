@@ -112,7 +112,6 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
             commands.append(command)
 
         channel_commands.append(commands)
-        print(channel_commands)
     return channel_commands
 
 
