@@ -69,6 +69,8 @@ ser = serial.Serial(args.port, 256000)
 
 
 def create_command(ser, channel, colors, mode, direction, option, group, speed):
+    init(ser)
+
     commands = []
     channel_commands = []
     modes = {
@@ -90,7 +92,10 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
     else:
         channels = [channel]
 
+    print(colors)
+
     for channela in channels:
+        commands = []
         for i, color in enumerate(colors):
             command = []
             command.append(75)
@@ -105,8 +110,9 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
             command = bytearray(command)
             #print(command)
             commands.append(command)
+
         channel_commands.append(commands)
-    print(channel_commands)
+        print(channel_commands)
     return channel_commands
 
 
@@ -114,19 +120,33 @@ def strips_info(ser, channel):
     out = bytearray.fromhex("8D0" + str(channel))
     ser.write(out)
     time.sleep(1)
-    r = int(ser.read(ser.in_waiting).hex()[-1])
+    out = ser.read(ser.in_waiting).hex()
+    print(channel)
+    if out:
+        r = int(out[-1])
+    else:
+        r = -1
     if r <= 0:
         r = 1
     return r
 
 
 def init(ser):
-    initial = [bytearray.fromhex("4B" + "00"*40), bytearray.fromhex("C0"), bytearray([70, 0, 192, 0, 0, 0, 255]), ]
+    C0(ser)
+    # Took out bytearray([70, 0, 192, 0, 0, 0, 255])
+    initial = [bytearray.fromhex("4B" + "00"*124)]
     for array in initial:
+        print(array)
         ser.write(array)
         time.sleep(0.2)
         ser.read()
 
+def C0(ser):
+    while True:
+        ser.write(bytearray.fromhex("C0"))
+        if ser.in_waiting != 0:
+            ser.read()
+            break
 
 def write(outputs):
     for channel in outputs:
@@ -143,7 +163,6 @@ def fixed(ser, gui, channel, color):
     command = create_command(ser, channel, [color], "fixed", 0, 0, 0, 2)
     outputs = previous.get_colors(channel, command)
     #print(outputs)
-    init(ser)
     write(outputs)
 
 
@@ -157,7 +176,6 @@ def breathing(ser, gui, channel, color, speed):
     command = create_command(ser, channel, color, "breathing", 0, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -171,7 +189,6 @@ def fading(ser, gui, channel, color, speed):
     command = create_command(ser, channel, color, "fading", 0, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -185,7 +202,6 @@ def marquee(ser, gui, channel, color, speed, size, direction):
 
     command = create_command(ser, channel, [color], "marquee", direction, 0, size, speed)
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -198,7 +214,6 @@ def cover_marquee(ser, gui, channel, color, speed, direction):
 
     command = create_command(ser, channel, color, "cover_marquee", direction, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -211,7 +226,6 @@ def pulse(ser, gui, channel, color, speed):
 
     command = create_command(ser, channel, color, "pulse", 0, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -220,7 +234,6 @@ def spectrum(ser, channel, speed, direction):
     command = create_command(ser, channel, ["0000FF"], "spectrum", direction, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -239,7 +252,6 @@ def alternating(ser, gui, channel, color, speed, size, moving, direction):
 
     command = create_command(ser, channel, color, "alternating", direction, option, size, speed)
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -251,7 +263,6 @@ def candlelight(ser, gui, channel, color):
     command = create_command(ser, channel, [color], "candlelight", 0, 0, 0, 0)
 
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 
@@ -262,7 +273,6 @@ def wings(ser, gui, channel, color, speed):
 
     command = create_command(ser, channel, [color], "wings", 0, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
-    init(ser)
     write(outputs)
 
 

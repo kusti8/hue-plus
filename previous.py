@@ -32,6 +32,7 @@ def get_colors(channel, changer):
     data = pickle.load(open(path, 'rb'))
     if channel == 0:
         #print(changer)
+        # Changer[0] is list of commands for first channel
         write(changer[0], changer[1])
         return [changer[0], changer[1]]
     elif channel == 1:
