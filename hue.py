@@ -92,8 +92,6 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
     else:
         channels = [channel]
 
-    print(colors)
-
     for channela in channels:
         commands = []
         for i, color in enumerate(colors):
@@ -120,7 +118,6 @@ def strips_info(ser, channel):
     ser.write(out)
     time.sleep(1)
     out = ser.read(ser.in_waiting).hex()
-    print(channel)
     if out:
         r = int(out[-1])
     else:
@@ -135,7 +132,6 @@ def init(ser):
     # Took out bytearray([70, 0, 192, 0, 0, 0, 255])
     initial = [bytearray.fromhex("4B" + "00"*124)]
     for array in initial:
-        print(array)
         ser.write(array)
         time.sleep(0.2)
         ser.read()

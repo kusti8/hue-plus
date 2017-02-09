@@ -39,7 +39,7 @@ def get_colors(channel, changer):
         write(changer[0], data[1])
         return [changer[0], data[1]]  # Return the original one channel and the previous second channel
     elif channel == 2:
-        write(data[0], changer[1])
+        write(data[0], changer[0])
         return [data[0], changer[0]]
 
 
