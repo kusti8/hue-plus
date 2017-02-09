@@ -1,3 +1,4 @@
+## Current version does not work with newer firmware, try the dev branch for a beta version
 # hue-plus
 A Linux driver in Python for the NZXT Hue+
 ## Install
@@ -14,7 +15,7 @@ Basic usage is shown below.
 
 `sudo hue -g 1 fixed FFFFFF` will bring up a color picker to choose a color
 ### Set a specific channel
-`sudo hue -c 1 fixed FFFFFF` where 1 is channel one and 2 is channel 2
+`sudo hue -c 1 fixed FFFFFF` where 1 is channel one and 2 is channel two
 ## Usage
 ```
 usage: hue [-h] [-p PORT] [-c CHANNEL] [-g GUI]
