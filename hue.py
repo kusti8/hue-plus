@@ -121,9 +121,10 @@ def strips_info(ser, channel):
 
 
 def init(ser):
-    initial = [bytearray([70, 0, 192, 0, 0, 0, 255])]
+    initial = [bytearray.fromhex("4B" + "00"*40), bytearray.fromhex("C0"), bytearray([70, 0, 192, 0, 0, 0, 255]), ]
     for array in initial:
         ser.write(array)
+        time.sleep(0.2)
         ser.read()
 
 
