@@ -1,4 +1,3 @@
-## Current version does not work with newer firmware, try the dev branch for a beta version
 # hue-plus
 A Linux driver in Python for the NZXT Hue+
 ## Install
