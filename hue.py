@@ -81,8 +81,11 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
         "cover_marquee": 4,
         "pulse": 6,
         "spectrum": 2,
+        "alternating": 5,
         "candlelight": 9,
-        "wings": 12
+        "wings": 12,
+        "wave": 13,
+        "alert": 8
     }
 
     strips = [0, strips_info(ser, 1)-1, strips_info(ser, 2)-1]
