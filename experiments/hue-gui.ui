@@ -75,7 +75,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>7</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="fixedTab">
        <attribute name="title">
@@ -523,7 +523,7 @@
           </rect>
          </property>
          <property name="maximum">
-          <number>4</number>
+          <number>3</number>
          </property>
          <property name="value">
           <number>2</number>
@@ -715,7 +715,7 @@
           <string>Slowest</string>
          </property>
         </widget>
-        <widget class="QCheckBox" name="coverMaruqeeBackwards">
+        <widget class="QCheckBox" name="coverMarqueeBackwards">
          <property name="geometry">
           <rect>
            <x>20</x>
@@ -1086,7 +1086,7 @@
           </rect>
          </property>
          <property name="maximum">
-          <number>4</number>
+          <number>3</number>
          </property>
          <property name="value">
           <number>2</number>

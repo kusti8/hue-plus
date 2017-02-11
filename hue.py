@@ -129,7 +129,7 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
         for i, color in enumerate(colors):
             command = []
             command.append(75)
-            command.append(channel)
+            command.append(channela)
             command.append(modes[mode])
             command.append(direction << 4 | option << 3 | strips[channela])
             command.append(i << 5 | group << 3 | speed)
@@ -223,7 +223,6 @@ def fading(ser, gui, channel, color, speed):
 def marquee(ser, gui, channel, color, speed, size, direction):
 
     if gui != 0:
-        color = []
         gui = 1
         for i in range(1):
             color = picker.pick("Color "+str(i+1) + " of "+str(gui))

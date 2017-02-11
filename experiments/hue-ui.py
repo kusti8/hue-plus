@@ -96,6 +96,9 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         colors = []
         for i in range(modeList.count()):
             colors.append(find_between(modeList.item(i).text(), '#', ')').upper())
+        if modeList.count() == 0:
+            self.error("Must have at least one color")
+            return ['FF0000']
         return colors
 
     ## Fixed
@@ -178,10 +181,11 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             if self.getChannel() == None:
                 hue.power(ser, 0, "off")
             else:
+                print(self.getChannel())
                 speed = self.marqueeSpeed.value()
                 size = self.marqueeSize.value()
                 direction = 0 if self.marqueeBackwards.isChecked() else 0
-                hue.marquee(ser, 0, self.getChannel(), self.getColors(self.marqueeList), speed, size, direction)
+                hue.marquee(ser, 0, self.getChannel(), self.getColors(self.marqueeList)[0], speed, size, direction)
 
     ## coverMarquee
     def coverMarqueeAddFunc(self):
@@ -230,37 +234,46 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             else:
                 speed = self.spectrumSpeed.value()
                 direction = 1 if self.spectrumBackwards.isChecked() else 0
-                hue.spectrum(ser, 0, self.getChannel(), speed, direction)
+                hue.spectrum(ser, self.getChannel(), speed, direction)
 
     ## alternating
     def alternatingAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
-        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
-        if not actual:
-            actual = closest
-        self.alternatingList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+        if self.alternatingList.count() == 2:
+            self.error("Alternating cannot have more than two colors")
+        else:
+            color = "#" + picker.pick("Color").lower()
+            actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+            if not actual:
+                actual = closest
+            self.alternatingList.addItem(QListWidgetItem(actual + "(" + color + ")"))
 
     def alternatingDeleteFunc(self):
         self.alternatingList.takeItem(self.alternatingList.currentRow())
 
     def alternatingApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.alternatingSpeed.value()
-                size = self.alternatingSize.value()
-                direction = 1 if self.alternatingBackwards.isChecked() else 0
-                moving = self.alternatingMoving.isChecked()
-                hue.alternating(ser, 0, self.getChannel(), self.getColors(self.alternatingList), speed, size, moving, direction)
+        if self.alternatingList.count() != 2:
+            self.error("Alternating must have two colors")
+        else:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.alternatingSpeed.value()
+                    size = self.alternatingSize.value()
+                    direction = 1 if self.alternatingBackwards.isChecked() else 0
+                    moving = self.alternatingMoving.isChecked()
+                    hue.alternating(ser, 0, self.getChannel(), self.getColors(self.alternatingList), speed, size, moving, direction)
 
     ## candle
     def candleAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
-        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
-        if not actual:
-            actual = closest
-        self.candleList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+        if self.candleList.count() == 1:
+            self.error("Candle cannot have more than 1 color")
+        else:
+            color = "#" + picker.pick("Color").lower()
+            actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+            if not actual:
+                actual = closest
+            self.candleList.addItem(QListWidgetItem(actual + "(" + color + ")"))
 
     def candleDeleteFunc(self):
         self.candleList.takeItem(self.candleList.currentRow())
@@ -270,15 +283,18 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             if self.getChannel() == None:
                 hue.power(ser, 0, "off")
             else:
-                hue.candlelight(ser, 0, self.getChannel(), self.getColors(self.candleList))
+                hue.candlelight(ser, 0, self.getChannel(), self.getColors(self.candleList)[0])
 
     ## wings
     def wingsAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
-        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
-        if not actual:
-            actual = closest
-        self.wingsList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+        if self.wingsList.count() == 1:
+            self.error("Wings cannot have more than 1 color")
+        else:
+            color = "#" + picker.pick("Color").lower()
+            actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+            if not actual:
+                actual = closest
+            self.wingsList.addItem(QListWidgetItem(actual + "(" + color + ")"))
 
     def wingsDeleteFunc(self):
         self.wingsList.takeItem(self.wingsList.currentRow())
@@ -289,7 +305,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                 hue.power(ser, 0, "off")
             else:
                 speed = self.wingsSpeed.value()
-                hue.wings(ser, 0, self.getChannel(), self.getColors(self.wingsList), speed)
+                hue.wings(ser, 0, self.getChannel(), self.getColors(self.wingsList)[0], speed)
 
 
     def applyFunc(self):
