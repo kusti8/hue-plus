@@ -89,6 +89,7 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
     }
 
     strips = [0, strips_info(ser, 1)-1, strips_info(ser, 2)-1]
+    strips[0] = max(strips)
 
     if channel == 0:
         channels = [1, 2]
@@ -100,7 +101,7 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
         for i, color in enumerate(colors):
             command = []
             command.append(75)
-            command.append(channel)
+            command.append(channela)
             command.append(modes[mode])
             command.append(direction << 4 | option << 3 | strips[channela])
             command.append(i << 5 | group << 3 | speed)
@@ -117,6 +118,7 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
 
 
 def strips_info(ser, channel):
+    time.sleep(0.2)
     out = bytearray.fromhex("8D0" + str(channel))
     ser.write(out)
     time.sleep(1)
@@ -137,7 +139,7 @@ def init(ser):
     for array in initial:
         ser.write(array)
         time.sleep(0.2)
-        ser.read()
+        ser.read(ser.in_waiting)
 
 def C0(ser):
     while True:
