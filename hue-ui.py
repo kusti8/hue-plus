@@ -1,5 +1,6 @@
+#!/usr/bin/env python3
 import sys
-sys.path.append('..')
+import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox
@@ -312,6 +313,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.indexApply[self.presetModeWidget.currentIndex()]()
 
 if __name__ == '__main__':
+    if os.geteuid() != 0:
+        sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
     app = QApplication(sys.argv)
     form = MainWindow()
     form.show()
