@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>801</width>
-    <height>600</height>
+    <width>946</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,12 +19,15 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>70</width>
+      <width>91</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
      <string>Channel 1</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QCheckBox" name="channel2Check">
@@ -32,12 +35,15 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>70</width>
+      <width>91</width>
       <height>17</height>
      </rect>
     </property>
     <property name="text">
      <string>Channel 2</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QTabWidget" name="modeWidget">
@@ -45,7 +51,7 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>781</width>
+      <width>921</width>
       <height>451</height>
      </rect>
     </property>
@@ -61,7 +67,7 @@
        <rect>
         <x>6</x>
         <y>9</y>
-        <width>761</width>
+        <width>901</width>
         <height>411</height>
        </rect>
       </property>
@@ -69,70 +75,1277 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>9</number>
       </property>
       <widget class="QWidget" name="fixedTab">
        <attribute name="title">
         <string>Fixed</string>
        </attribute>
-       <widget class="QLabel" name="label">
+       <widget class="QGroupBox" name="groupBox">
         <property name="geometry">
          <rect>
-          <x>650</x>
-          <y>340</y>
-          <width>62</width>
-          <height>20</height>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
          </rect>
         </property>
-        <property name="text">
-         <string>Color</string>
+        <property name="title">
+         <string>Colors</string>
         </property>
+        <widget class="QListWidget" name="fixedList">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="breathingTab">
        <attribute name="title">
         <string>Breathing</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_11">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_11">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_11">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_11">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="breathingSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_5">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="fadingTab">
        <attribute name="title">
         <string>Fading</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_10">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_10">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_10">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_12">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="fadingSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_9">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_10">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_11">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="marqueeTab">
        <attribute name="title">
         <string>Marquee</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_4">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_4">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_4">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_4">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_13">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="marqueeSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_15">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_16">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_17">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+        <widget class="QSlider" name="marqueeSize">
+         <property name="geometry">
+          <rect>
+           <x>185</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_18">
+         <property name="geometry">
+          <rect>
+           <x>240</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Smaller</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_19">
+         <property name="geometry">
+          <rect>
+           <x>180</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Size</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_20">
+         <property name="geometry">
+          <rect>
+           <x>240</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Larger</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="marqueeBackwards">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>260</y>
+           <width>89</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Backwards</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="coverMarqueeTab">
        <attribute name="title">
         <string>Covering Marquee</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_5">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_5">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_5">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_5">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_15">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="coverMarqueeSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_27">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_28">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_29">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="coverMaruqeeBackwards">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>260</y>
+           <width>89</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Backwards</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="pulseTab">
        <attribute name="title">
         <string>Pulse</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_6">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_6">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_6">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_6">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_16">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="pulseSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_33">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_34">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_35">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="spectrumTab">
        <attribute name="title">
         <string>Spectrum</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_17">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="spectrumSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_39">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_40">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_41">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="spectrumBackwards">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>260</y>
+           <width>89</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Backwards</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="alternatingTab">
        <attribute name="title">
         <string>Alternating</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_7">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_7">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_7">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_7">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_18">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="alternatingSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_45">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_46">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_47">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+        <widget class="QSlider" name="alternatingSize">
+         <property name="geometry">
+          <rect>
+           <x>185</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_48">
+         <property name="geometry">
+          <rect>
+           <x>240</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Smaller</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_49">
+         <property name="geometry">
+          <rect>
+           <x>180</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Size</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_50">
+         <property name="geometry">
+          <rect>
+           <x>240</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Larger</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="alternatingBackwards">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>260</y>
+           <width>89</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Backwards</string>
+         </property>
+        </widget>
+        <widget class="QCheckBox" name="alternatingMoving">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>290</y>
+           <width>89</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Moving</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="candleTab">
        <attribute name="title">
         <string>Candle</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_8">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_8">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_8">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_8">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
       <widget class="QWidget" name="wingsTab">
        <attribute name="title">
         <string>Wings</string>
        </attribute>
+       <widget class="QGroupBox" name="groupBox_9">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="fixedList_9">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedAdd_9">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="fixedDelete_9">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_20">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QSlider" name="wingsSpeed">
+         <property name="geometry">
+          <rect>
+           <x>15</x>
+           <y>70</y>
+           <width>31</width>
+           <height>160</height>
+          </rect>
+         </property>
+         <property name="maximum">
+          <number>4</number>
+         </property>
+         <property name="value">
+          <number>2</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="tickPosition">
+          <enum>QSlider::TicksBothSides</enum>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_57">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_58">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>60</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Fastest</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_59">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>210</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Slowest</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
      </widget>
     </widget>
@@ -140,8 +1353,8 @@
    <widget class="QPushButton" name="applyBtn">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>500</y>
+      <x>310</x>
+      <y>510</y>
       <width>101</width>
       <height>41</height>
      </rect>
@@ -150,16 +1363,32 @@
      <string>Apply</string>
     </property>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>801</width>
-     <height>25</height>
-    </rect>
-   </property>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>20</y>
+      <width>62</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Port:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="portTxt">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>20</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>/dev/ttyACM0</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
