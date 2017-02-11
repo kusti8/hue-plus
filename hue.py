@@ -198,7 +198,7 @@ def marquee(ser, gui, channel, color, speed, size, direction):
         color = []
         gui = 1
         for i in range(1):
-            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
+            color = picker.pick("Color "+str(i+1) + " of "+str(gui))
 
     command = create_command(ser, channel, [color], "marquee", direction, 0, size, speed)
     outputs = previous.get_colors(channel, command)
