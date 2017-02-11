@@ -122,8 +122,6 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
     else:
         channels = [channel]
 
-    print(colors)
-
     for channela in channels:
         commands = []
         for i, color in enumerate(colors):
