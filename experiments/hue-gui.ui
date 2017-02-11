@@ -75,7 +75,7 @@
        <enum>Qt::LeftToRight</enum>
       </property>
       <property name="currentIndex">
-       <number>9</number>
+       <number>7</number>
       </property>
       <widget class="QWidget" name="fixedTab">
        <attribute name="title">
@@ -147,7 +147,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_11">
+        <widget class="QListWidget" name="breathingList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -157,7 +157,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_11">
+        <widget class="QPushButton" name="breathingAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -170,7 +170,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_11">
+        <widget class="QPushButton" name="breathingDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -275,7 +275,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_10">
+        <widget class="QListWidget" name="fadingList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -285,7 +285,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_10">
+        <widget class="QPushButton" name="fadingAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -298,7 +298,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_10">
+        <widget class="QPushButton" name="fadingDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -403,7 +403,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_4">
+        <widget class="QListWidget" name="marqueeList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -413,7 +413,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_4">
+        <widget class="QPushButton" name="marqueeAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -426,7 +426,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_4">
+        <widget class="QPushButton" name="marqueeDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -605,7 +605,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_5">
+        <widget class="QListWidget" name="coverMarqueeList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -615,7 +615,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_5">
+        <widget class="QPushButton" name="coverMarqueeAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -628,7 +628,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_5">
+        <widget class="QPushButton" name="coverMarqueeDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -746,7 +746,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_6">
+        <widget class="QListWidget" name="pulseList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -756,7 +756,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_6">
+        <widget class="QPushButton" name="pulseAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -769,7 +769,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_6">
+        <widget class="QPushButton" name="pulseDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -966,7 +966,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_7">
+        <widget class="QListWidget" name="alternatingList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -976,7 +976,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_7">
+        <widget class="QPushButton" name="alternatingAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -989,7 +989,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_7">
+        <widget class="QPushButton" name="alternatingDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -1181,7 +1181,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_8">
+        <widget class="QListWidget" name="candleList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -1191,7 +1191,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_8">
+        <widget class="QPushButton" name="candleAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -1204,7 +1204,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_8">
+        <widget class="QPushButton" name="candleDelete">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -1235,7 +1235,7 @@
         <property name="title">
          <string>Colors</string>
         </property>
-        <widget class="QListWidget" name="fixedList_9">
+        <widget class="QListWidget" name="wingsList">
          <property name="geometry">
           <rect>
            <x>10</x>
@@ -1245,7 +1245,7 @@
           </rect>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedAdd_9">
+        <widget class="QPushButton" name="wingsAdd">
          <property name="geometry">
           <rect>
            <x>130</x>
@@ -1258,7 +1258,7 @@
           <string>Add color</string>
          </property>
         </widget>
-        <widget class="QPushButton" name="fixedDelete_9">
+        <widget class="QPushButton" name="wingsDelete">
          <property name="geometry">
           <rect>
            <x>130</x>

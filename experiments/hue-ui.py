@@ -53,10 +53,27 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             6: self.spectrumApply,
             7: self.alternatingApply,
             8: self.candleApply,
-            9: self.wingsApply}
+            9: self.wingsApply
+            }
 
         self.fixedAdd.clicked.connect(self.fixedAddFunc)
         self.fixedDelete.clicked.connect(self.fixedDeleteFunc)
+        self.breathingAdd.clicked.connect(self.breathingAddFunc)
+        self.breathingDelete.clicked.connect(self.breathingDeleteFunc)
+        self.fadingAdd.clicked.connect(self.fadingAddFunc)
+        self.fadingDelete.clicked.connect(self.fadingDeleteFunc)
+        self.marqueeAdd.clicked.connect(self.marqueeAddFunc)
+        self.marqueeDelete.clicked.connect(self.marqueeDeleteFunc)
+        self.coverMarqueeAdd.clicked.connect(self.coverMarqueeAddFunc)
+        self.coverMarqueeDelete.clicked.connect(self.coverMarqueeDeleteFunc)
+        self.pulseAdd.clicked.connect(self.pulseAddFunc)
+        self.pulseDelete.clicked.connect(self.pulseDeleteFunc)
+        self.alternatingAdd.clicked.connect(self.alternatingAddFunc)
+        self.alternatingDelete.clicked.connect(self.alternatingDeleteFunc)
+        self.candleAdd.clicked.connect(self.candleAddFunc)
+        self.candleDelete.clicked.connect(self.candleDeleteFunc)
+        self.wingsAdd.clicked.connect(self.wingsAddFunc)
+        self.wingsDelete.clicked.connect(self.wingsDeleteFunc)
         self.applyBtn.clicked.connect(self.applyFunc)
 
     def error(self, message):
@@ -77,8 +94,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def getColors(self, modeList):
         colors = []
-        for i in range(modeList.count):
-            colors.append(find_between(modeList.item(0).text, '#', ')').upper())
+        for i in range(modeList.count()):
+            colors.append(find_between(modeList.item(i).text(), '#', ')').upper())
         return colors
 
     ## Fixed
@@ -97,10 +114,12 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def fixedApply(self):
         with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if getChannel() == None:
+            print("Applying")
+            if self.getChannel() == None:
                 hue.power(ser, 0, "off")
             else:
-                hue.fixed(ser, 0, getChannel(), self.getColors(self.fixedList)[0])
+                print(self.getColors(self.fixedList)[0], self.getChannel())
+                hue.fixed(ser, 0, self.getChannel(), self.getColors(self.fixedList)[0])
 
     ## Breathing
     def breathingAddFunc(self):
@@ -115,11 +134,11 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def breathingApply(self):
         with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if getChannel() == None:
+            if self.getChannel() == None:
                 hue.power(ser, 0, "off")
             else:
                 speed = self.breathingSpeed.value()
-                hue.breathing(ser, 0, getChannel(), self.getColors(self.breathingList), speed)
+                hue.breathing(ser, 0, self.getChannel(), self.getColors(self.breathingList), speed)
 
     ## Fading
     def fadingAddFunc(self):
@@ -134,35 +153,147 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def fadingApply(self):
         with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if getChannel() == None:
+            if self.getChannel() == None:
                 hue.power(ser, 0, "off")
             else:
                 speed = self.fadingSpeed.value()
-                hue.fading(ser, 0, getChannel(), self.getColors(self.fadingList), speed)
+                hue.fading(ser, 0, self.getChannel(), self.getColors(self.fadingList), speed)
 
     ## Marquee
     def marqueeAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
-        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
-        if not actual:
-            actual = closest
-        self.marqueeList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+        if self.marqueeList.count() == 1:
+            self.error("Marquee cannot have more than one color")
+        else:
+            color = "#" + picker.pick("Color").lower()
+            actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+            if not actual:
+                actual = closest
+            self.marqueeList.addItem(QListWidgetItem(actual + "(" + color + ")"))
 
-    def fadingDeleteFunc(self):
+    def marqueeDeleteFunc(self):
         self.marqueeList.takeItem(self.marqueeList.currentRow())
 
-    def fadingApply(self):
+    def marqueeApply(self):
         with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if getChannel() == None:
+            if self.getChannel() == None:
                 hue.power(ser, 0, "off")
             else:
                 speed = self.marqueeSpeed.value()
                 size = self.marqueeSize.value()
-                direction = 1 if self.marqueeBackwards.isChecked() else 0
-                hue.fading(ser, 0, getChannel(), self.getColors(self.fadingList), speed)
+                direction = 0 if self.marqueeBackwards.isChecked() else 0
+                hue.marquee(ser, 0, self.getChannel(), self.getColors(self.marqueeList), speed, size, direction)
+
+    ## coverMarquee
+    def coverMarqueeAddFunc(self):
+        color = "#" + picker.pick("Color").lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        self.coverMarqueeList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+
+    def coverMarqueeDeleteFunc(self):
+        self.coverMarqueeList.takeItem(self.coverMarqueeList.currentRow())
+
+    def coverMarqueeApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                speed = self.coverMarqueeSpeed.value()
+                direction = 0 if self.coverMarqueeBackwards.isChecked() else 0
+                hue.cover_marquee(ser, 0, self.getChannel(), self.getColors(self.coverMarqueeList), speed, direction)
+
+    ## pulse
+    def pulseAddFunc(self):
+        color = "#" + picker.pick("Color").lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        self.pulseList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+
+    def pulseDeleteFunc(self):
+        self.pulseList.takeItem(self.pulseList.currentRow())
+
+    def pulseApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                speed = self.pulseSpeed.value()
+                hue.pulse(ser, 0, self.getChannel(), self.getColors(self.pulseList), speed)
+
+    ## spectrum
+    def spectrumApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                speed = self.spectrumSpeed.value()
+                direction = 1 if self.spectrumBackwards.isChecked() else 0
+                hue.spectrum(ser, 0, self.getChannel(), speed, direction)
+
+    ## alternating
+    def alternatingAddFunc(self):
+        color = "#" + picker.pick("Color").lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        self.alternatingList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+
+    def alternatingDeleteFunc(self):
+        self.alternatingList.takeItem(self.alternatingList.currentRow())
+
+    def alternatingApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                speed = self.alternatingSpeed.value()
+                size = self.alternatingSize.value()
+                direction = 1 if self.alternatingBackwards.isChecked() else 0
+                moving = self.alternatingMoving.isChecked()
+                hue.alternating(ser, 0, self.getChannel(), self.getColors(self.alternatingList), speed, size, moving, direction)
+
+    ## candle
+    def candleAddFunc(self):
+        color = "#" + picker.pick("Color").lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        self.candleList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+
+    def candleDeleteFunc(self):
+        self.candleList.takeItem(self.candleList.currentRow())
+
+    def candleApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                hue.candlelight(ser, 0, self.getChannel(), self.getColors(self.candleList))
+
+    ## wings
+    def wingsAddFunc(self):
+        color = "#" + picker.pick("Color").lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        self.wingsList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+
+    def wingsDeleteFunc(self):
+        self.wingsList.takeItem(self.wingsList.currentRow())
+
+    def wingsApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                speed = self.wingsSpeed.value()
+                hue.wings(ser, 0, self.getChannel(), self.getColors(self.wingsList), speed)
+
 
     def applyFunc(self):
-        self.presetModeWidget.currentIndex()
+        self.indexApply[self.presetModeWidget.currentIndex()]()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

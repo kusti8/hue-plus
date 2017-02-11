@@ -8,8 +8,6 @@ import picker
 import previous
 
 def main():
-    global ser
-
     if os.geteuid() != 0:
         sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
 
@@ -124,6 +122,8 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
     else:
         channels = [channel]
 
+    print(colors)
+
     for channela in channels:
         commands = []
         for i, color in enumerate(colors):
@@ -175,9 +175,10 @@ def C0(ser):
             ser.read()
             break
 
-def write(outputs):
+def write(ser, outputs):
     for channel in outputs:
         for line in channel:
+            #print(line.hex().upper())
             ser.write(line)
             ser.read()
 
@@ -190,7 +191,7 @@ def fixed(ser, gui, channel, color):
     command = create_command(ser, channel, [color], "fixed", 0, 0, 0, 2)
     outputs = previous.get_colors(channel, command)
     #print(outputs)
-    write(outputs)
+    write(ser, outputs)
 
 
 def breathing(ser, gui, channel, color, speed):
@@ -203,7 +204,7 @@ def breathing(ser, gui, channel, color, speed):
     command = create_command(ser, channel, color, "breathing", 0, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def fading(ser, gui, channel, color, speed):
@@ -216,7 +217,7 @@ def fading(ser, gui, channel, color, speed):
     command = create_command(ser, channel, color, "fading", 0, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def marquee(ser, gui, channel, color, speed, size, direction):
@@ -225,11 +226,11 @@ def marquee(ser, gui, channel, color, speed, size, direction):
         color = []
         gui = 1
         for i in range(1):
-            color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
+            color = picker.pick("Color "+str(i+1) + " of "+str(gui))
 
     command = create_command(ser, channel, [color], "marquee", direction, 0, size, speed)
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def cover_marquee(ser, gui, channel, color, speed, direction):
@@ -241,7 +242,7 @@ def cover_marquee(ser, gui, channel, color, speed, direction):
 
     command = create_command(ser, channel, color, "cover_marquee", direction, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def pulse(ser, gui, channel, color, speed):
@@ -253,7 +254,7 @@ def pulse(ser, gui, channel, color, speed):
 
     command = create_command(ser, channel, color, "pulse", 0, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def spectrum(ser, channel, speed, direction):
@@ -261,7 +262,7 @@ def spectrum(ser, channel, speed, direction):
     command = create_command(ser, channel, ["0000FF"], "spectrum", direction, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def alternating(ser, gui, channel, color, speed, size, moving, direction):
@@ -279,7 +280,7 @@ def alternating(ser, gui, channel, color, speed, size, moving, direction):
 
     command = create_command(ser, channel, color, "alternating", direction, option, size, speed)
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def candlelight(ser, gui, channel, color):
@@ -290,7 +291,7 @@ def candlelight(ser, gui, channel, color):
     command = create_command(ser, channel, [color], "candlelight", 0, 0, 0, 0)
 
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def wings(ser, gui, channel, color, speed):
@@ -300,7 +301,7 @@ def wings(ser, gui, channel, color, speed):
 
     command = create_command(ser, channel, [color], "wings", 0, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
-    write(outputs)
+    write(ser, outputs)
 
 
 def power(ser, channel, state):
