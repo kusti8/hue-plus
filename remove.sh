@@ -9,6 +9,7 @@ fi
 
 rm /usr/bin/hue
 rm /usr/bin/hue-picker
+rm /usr/bin/hue-ui
 
 rm -r /var/lib/hue-plus
 

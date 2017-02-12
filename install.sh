@@ -11,8 +11,10 @@ pip3 install pyserial
 
 ln -s $(pwd)/hue.py /usr/bin/hue
 ln -s $(pwd)/picker.py /usr/bin/hue-picker
+ln -s $(pwd)/hue-ui.py /usr/bin/hue-ui
 
 mkdir /var/lib/hue-plus
 cp previous.p /var/lib/hue-plus/previous.p
 
-echo "Now you can run 'hue' or 'hue-picker' from anywhere!"
+echo "Install PyQt5 to run the UI"
+echo "Now you can run 'hue', 'hue-picker' or 'hue-ui' from anywhere!"
