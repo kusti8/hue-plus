@@ -1,8 +1,8 @@
 # hue-plus
 A Linux driver in Python for the NZXT Hue+
 
-![Fixed](https://raw.githubusercontent.com/kusti8/hue-plus/master/images/fixed.png)
-![Alternating](https://raw.githubusercontent.com/kusti8/hue-plus/master/images/alternating.png)
+![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
+![Alternating](https://github.com/kusti8/hue-plus/raw/master/alternating.png)
 ## Install
 To install it system wide, simply run install.sh as root `sudo ./install.sh`
 
