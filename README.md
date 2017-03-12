@@ -1,5 +1,6 @@
 # hue-plus
 A Linux driver in Python for the NZXT Hue+
+
 ## Install
 To install it system wide, simply run install.sh as root `sudo ./install.sh`
 
@@ -23,13 +24,13 @@ Basic usage is shown below.
 ## Usage
 ```
 usage: hue [-h] [-p PORT] [-c CHANNEL] [-g GUI]
-           {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,power}
+           {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,power}
            ...
 
 Change NZXT Hue+ LEDs
 
 positional arguments:
-  {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,power}
+  {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,power}
                         The type of color (fixed, breathing)
     fixed               One single fixed color
     breathing           Breathing through a set of colors
@@ -40,13 +41,14 @@ positional arguments:
     spectrum            Pulsing through a set of colors
     alternating         Two alternating colors
     candlelight         A flickering color
+    wings               Strips of light meeting in the center
     power               Control power to the channels
 
 optional arguments:
   -h, --help            show this help message and exit
   -p PORT, --port PORT  The port, defaults to /dev/ttyACM0
   -c CHANNEL, --channel CHANNEL
-                        The channel, defaults to 1
+                        The channel, defaults to 0 (BOTH)
   -g GUI, --gui GUI     How many colors of GUI picker
 ```
 ### Fixed
@@ -83,16 +85,15 @@ optional arguments:
 ```
 ### Marquee
 ```
-usage: hue marquee [-h] [-c] [-b] speed size colors colors
+usage: hue marquee [-h] [-b] speed size color
 
 positional arguments:
   speed            Speed from 0(Slowest) to 4(Fastest)
-  size             The size of the group of runners (0=2, 1=3, 2=5, 3=10)
-  colors           Foreground and background colors in hex
+  size             The size of the group of runners (0=3, 1=4, 2=5, 3=6)
+  color            Foreground color in hex
 
 optional arguments:
   -h, --help       show this help message and exit
-  -c, --comet      Enable comet mode (leave a trail)
   -b, --backwards  Enable going backwards
 ```
 ### Covering Marquee
@@ -148,6 +149,17 @@ optional arguments:
 usage: hue candlelight [-h] color
 
 positional arguments:
+  color       Color in hex
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+### Wings
+```
+usage: hue wings [-h] speed color
+
+positional arguments:
+  speed       Speed from 0(Slowest) to 4(Fastest)
   color       Color in hex
 
 optional arguments:
