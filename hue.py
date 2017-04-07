@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 import serial
 import time
+from time import sleep
 import sys
 import argparse
 import os
 import picker
 import previous
+import sys
+import struct
+import math
+import colorsys
 
 def main():
-    if os.geteuid() != 0:
-        sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
+    #if os.geteuid() != 0:
+    #    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
 
     parser = argparse.ArgumentParser(description="Change NZXT Hue+ LEDs")
     parser.add_argument("-p", "--port", default="/dev/ttyACM0", type=str, help="The port, defaults to /dev/ttyACM0")
@@ -61,6 +66,11 @@ def main():
     parser_wings.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
     parser_wings.add_argument("color", type=str, help="Color in hex")
 
+    parser_audio_level = subparsers.add_parser('audio_level', help="Light syncronized to music levels")
+    parser_audio_level.add_argument("tolerance", type=float, help="The maximum audio level ie. when the audio is as loud as tolerance, all LEDs will be lit")
+    parser_audio_level.add_argument("refresh", type=int, help="The speed of refreshing the LEDs (usually 5 is a good number)")
+    parser_audio_level.add_argument("colors", type=str, nargs='+', help="Colors in hex, starting from lowest volume to highest")
+
     parser_power = subparsers.add_parser('power', help="Control power to the channels")
     parser_power.add_argument("state", type=str, help="State (on/off)")
 
@@ -88,11 +98,156 @@ def main():
         candlelight(ser, args.gui, args.channel, args.color)
     elif args.command == 'wings':
         wings(ser, args.gui, args.channel, args.color, args.speed)
+    elif args.command == 'audio_level':
+        audio_level(ser, args.gui, args.channel, args.colors, args.tolerance, args.refresh)
     elif args.command == 'power':
         power(ser, args.channel, args.state)
     else:
         print("INVALID COMMAND")
         sys.exit(-1)
+
+def write_audio(ser, channel, colors, tolerance, value, strips):
+    try:
+        if value >= tolerance: # Prevent index out of range
+            value = tolerance
+        elif value < 0.0:
+            value = 0.0
+        normal = (value/tolerance)*int(strips[channel-1]*10)
+        normal_color = (value/tolerance)*len(colors)
+        size = int(strips[channel-1]*10/len(colors))
+        value = normal_color*size-int(normal_color*size) # Get value fraction
+        dis = colors[:int(normal_color)]
+        display = []
+        for color in dis:
+            for i in range(int(size)):
+                display.append(color)
+        for i in range(int(value*size)):
+            display.append(colors[int(normal_color)])
+        rgb = colors[int(normal_color)]
+        rgb = (int(rgb[:2], 16)/255.0, int(rgb[2:4], 16)/255.0, int(rgb[4:], 16)/255.0)
+        h, s, v = colorsys.rgb_to_hsv(*rgb)
+        v = value*v # Change value of final color
+        r,g,b = colorsys.hsv_to_rgb(h, s, v)
+        r = int(r*255)
+        g = int(g*255)
+        b = int(b*255)
+        hexcolor = '%02x%02x%02x' % (r,g,b) # Back to html notation
+        display.append(hexcolor.upper())
+    except KeyboardInterrupt:
+        raise
+    except:
+        return
+    command = create_custom(ser, channel, display, "audio", 0, 0, 0, 0, strips)
+    outputs = previous.get_colors(channel, command)
+    write(ser, outputs)
+
+def audio_level(ser, gui, channel, colors, tolerance, smooth):
+    if os.geteuid() == 0:
+        sys.exit("Audio won't work with root. Login as a normal user, add your user to the group of /dev/ttyACM0 and retry without root")
+    if 1 <= gui <= 8:
+        colors = []
+        for i in range(gui):
+            colors.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
+    strips = [strips_info(ser, 1), strips_info(ser, 2)]
+    init(ser)
+    import pyaudio
+    import wave
+
+    chunk = 1024
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RATE = 44100
+    RECORD_SECONDS = 500000
+    WAVE_OUTPUT_FILENAME = "output.wav"
+    p = pyaudio.PyAudio()
+    stream = p.open(format = FORMAT,
+                    channels = CHANNELS,
+                    rate = RATE,
+                    input = True,
+                    output = True,
+                    frames_per_buffer = chunk)
+    alls = []
+    s = []
+    try:
+        while True:
+            try:
+                data = stream.read(chunk)
+            except IOError:
+                continue
+            alls.append(data)
+            if len(alls)>1:
+                data = b''.join(alls)
+                wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+                wf.setnchannels(CHANNELS)
+                wf.setsampwidth(p.get_sample_size(FORMAT))
+                wf.setframerate(RATE)
+                wf.writeframes(data)
+                wf.close()
+                w = wave.open(WAVE_OUTPUT_FILENAME, 'rb')
+                summ = 0
+                value = 1
+                delta = 1
+                amps = [ ]
+                for i in range(0, w.getnframes()):
+                    data = struct.unpack('<h', w.readframes(1))
+                    summ += (data[0]*data[0]) / 2
+                    if (i != 0 and (i % 1470) == 0):
+                        value = int(math.sqrt(summ / 1470.0) / 10)
+                        amps.append(value - delta)
+                        summ = 0
+                        tarW=float(amps[0]*1.0/delta/100)
+                        s.append(tarW)
+                        if len(s) >= smooth:
+                            out = sum(s)/len(s)
+                            write_audio(ser, 1, colors, tolerance, out, strips)
+                            write_audio(ser, 2, colors, tolerance, out, strips)
+                            s = []
+                        delta = value
+                alls=[]
+    except:
+        stream.close()
+        p.terminate()
+        os.remove(WAVE_OUTPUT_FILENAME)
+        raise
+
+def create_custom(ser, channel, colors, mode, direction, option, group, speed, strips):
+    if colors == None:
+        colors = []
+
+    commands = []
+    channel_commands = []
+    modes = {
+        "audio": 14
+    }
+    if modes[mode] != 14: # Audio flickers when initing, not needed
+        init(ser)
+
+    strips = [0, strips[0]-1, strips[1]-1]
+    strips[0] = max(strips)
+
+    if channel == 0:
+        channels = [1, 2]
+    else:
+        channels = [channel]
+
+    for channela in channels:
+        command = []
+        command.append(75)
+        command.append(channela)
+        command.append(modes[mode])
+        command.append(direction << 4 | option << 3 | strips[channela])
+        command.append(0 << 5 | group << 3 | speed)
+        for color in colors:
+            command.append(int(color[2:4], 16))
+            command.append(int(color[:2], 16))
+            command.append(int(color[4:], 16))
+        for z in range(40-len(colors)):
+            command.append(0)
+            command.append(0)
+            command.append(0)
+        command = bytearray(command)
+        channel_commands.append([command])
+    return channel_commands
 
 
 def create_command(ser, channel, colors, mode, direction, option, group, speed):
@@ -137,7 +292,6 @@ def create_command(ser, channel, colors, mode, direction, option, group, speed):
                 command.append(int(color[:2], 16))
                 command.append(int(color[4:], 16))
             command = bytearray(command)
-            #print(command)
             commands.append(command)
 
         channel_commands.append(commands)
@@ -178,9 +332,9 @@ def C0(ser):
 def write(ser, outputs):
     for channel in outputs:
         for line in channel:
-            #print(line.hex().upper())
-            ser.write(line)
-            ser.read()
+            if line:
+                ser.write(line)
+                ser.read()
 
 
 def fixed(ser, gui, channel, color):
@@ -190,7 +344,6 @@ def fixed(ser, gui, channel, color):
 
     command = create_command(ser, channel, [color], "fixed", 0, 0, 0, 2)
     outputs = previous.get_colors(channel, command)
-    #print(outputs)
     write(ser, outputs)
 
 

@@ -1347,6 +1347,131 @@
         </widget>
        </widget>
       </widget>
+      <widget class="QWidget" name="audioLevelTab">
+       <attribute name="title">
+        <string>Audio Level</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_21">
+        <property name="geometry">
+         <rect>
+          <x>240</x>
+          <y>0</y>
+          <width>321</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QLabel" name="label_60">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>30</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Tolerance</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_61">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>80</y>
+           <width>81</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Smoothness</string>
+         </property>
+        </widget>
+        <widget class="QDoubleSpinBox" name="audioLevelTolerance">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>68</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="decimals">
+          <number>1</number>
+         </property>
+         <property name="value">
+          <double>1.000000000000000</double>
+         </property>
+        </widget>
+        <widget class="QDoubleSpinBox" name="audioLevelSmooth">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>100</y>
+           <width>68</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="value">
+          <double>5.000000000000000</double>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_10">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>231</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QListWidget" name="audioLevelList">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="audioLevelAdd">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add color</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="audioLevelDelete">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete color</string>
+         </property>
+        </widget>
+       </widget>
+      </widget>
      </widget>
     </widget>
    </widget>

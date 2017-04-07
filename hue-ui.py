@@ -54,7 +54,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             6: self.spectrumApply,
             7: self.alternatingApply,
             8: self.candleApply,
-            9: self.wingsApply
+            9: self.wingsApply,
+            10: self.audioLevelApply
             }
 
         self.fixedAdd.clicked.connect(self.fixedAddFunc)
@@ -75,6 +76,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.candleDelete.clicked.connect(self.candleDeleteFunc)
         self.wingsAdd.clicked.connect(self.wingsAddFunc)
         self.wingsDelete.clicked.connect(self.wingsDeleteFunc)
+        self.audioLevelAdd.clicked.connect(self.audioLevelAddFunc)
+        self.audioLevelDelete.clicked.connect(self.audioLevelDeleteFunc)
         self.applyBtn.clicked.connect(self.applyFunc)
 
     def error(self, message):
@@ -308,13 +311,33 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                 speed = self.wingsSpeed.value()
                 hue.wings(ser, 0, self.getChannel(), self.getColors(self.wingsList)[0], speed)
 
+    ## audio_level
+    def audioLevelAddFunc(self):
+        color = "#" + picker.pick("Color").lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        self.audioLevelList.addItem(QListWidgetItem(actual + "(" + color + ")"))
+
+    def audioLevelDeleteFunc(self):
+        self.audioLevelList.takeItem(self.audioLevelList.currentRow())
+
+    def audioLevelApply(self):
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                tolerance = float(self.audioLevelTolerance.value())
+                smooth = int(self.audioLevelTolerance.value())
+                hue.audio_level(ser, 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth)
+
 
     def applyFunc(self):
         self.indexApply[self.presetModeWidget.currentIndex()]()
 
 if __name__ == '__main__':
-    if os.geteuid() != 0:
-        sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
+    #if os.geteuid() != 0:
+    #    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
     app = QApplication(sys.argv)
     form = MainWindow()
     form.show()

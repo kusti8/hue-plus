@@ -1,4 +1,5 @@
 # hue-plus
+## Now with audio sync support!
 A Linux driver in Python for the NZXT Hue+
 
 ![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
@@ -26,13 +27,13 @@ Basic usage is shown below.
 ## Usage
 ```
 usage: hue [-h] [-p PORT] [-c CHANNEL] [-g GUI]
-           {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,power}
+           {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,audio_level,power}
            ...
 
 Change NZXT Hue+ LEDs
 
 positional arguments:
-  {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,power}
+  {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,audio_level,power}
                         The type of color (fixed, breathing)
     fixed               One single fixed color
     breathing           Breathing through a set of colors
@@ -44,6 +45,7 @@ positional arguments:
     alternating         Two alternating colors
     candlelight         A flickering color
     wings               Strips of light meeting in the center
+    audio_level         Light syncronized to music levels
     power               Control power to the channels
 
 optional arguments:
@@ -163,6 +165,19 @@ usage: hue wings [-h] speed color
 positional arguments:
   speed       Speed from 0(Slowest) to 4(Fastest)
   color       Color in hex
+
+optional arguments:
+  -h, --help  show this help message and exit
+```
+### Audio (requires PyAudio and nonroot)
+```
+usage: hue audio_level [-h] tolerance refresh colors [colors ...]
+
+positional arguments:
+  tolerance   The maximum audio level ie. when the audio is as loud as
+              tolerance, all LEDs will be lit
+  refresh     The speed of refreshing the LEDs (usually 5 is a good number)
+  colors      Colors in hex, starting from lowest volume to highest
 
 optional arguments:
   -h, --help  show this help message and exit
