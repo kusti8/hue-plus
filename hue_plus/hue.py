@@ -5,15 +5,14 @@ from time import sleep
 import sys
 import argparse
 import os
-import hue_plus.picker
-import hue_plus.previous
+from . import picker
+from . import previous
 import sys
 import struct
 import math
 import colorsys
 
 def main():
-    #Test
     #if os.geteuid() != 0:
     #    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
 
@@ -150,6 +149,10 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
         for i in range(gui):
             colors.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
     strips = [strips_info(ser, 1), strips_info(ser, 2)]
+    if channel == 0:
+        channel = [1, 2]
+    else:
+        channel = [channel]
     init(ser)
     import pyaudio
     import wave
@@ -200,8 +203,8 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
                         s.append(tarW)
                         if len(s) >= smooth:
                             out = sum(s)/len(s)
-                            write_audio(ser, 1, colors, tolerance, out, strips)
-                            write_audio(ser, 2, colors, tolerance, out, strips)
+                            for c in channel:
+                                write_audio(ser, c, colors, tolerance, out, strips)
                             s = []
                         delta = value
                 alls=[]

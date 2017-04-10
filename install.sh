@@ -11,7 +11,7 @@ pip3 install pyserial webcolors
 
 ln -s $(pwd)/hue.py /usr/bin/hue
 ln -s $(pwd)/picker.py /usr/bin/hue-picker
-ln -s $(pwd)/hue-ui.py /usr/bin/hue-ui
+ln -s $(pwd)/hue_ui.py /usr/bin/hue_ui
 
 mkdir /var/lib/hue-plus
 cp previous.p /var/lib/hue-plus/previous.p
