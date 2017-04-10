@@ -1,30 +1,19 @@
 #!/usr/bin/env python3
-import subprocess
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QColorDialog
+from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtGui import QColor
 
-def RGBToHTMLColor(rgb_tuple):
-    """ convert an (R, G, B) tuple to #RRGGBB """
-    hexcolor = '%02x%02x%02x' % rgb_tuple
-    # that's it! '%02x' means zero-padded, 2-digit hex values
-    return hexcolor.upper()
+def pick(n):
+    app = QApplication(sys.argv)
 
-def find_between( s, first, last ):
-    try:
-        start = s.index( first ) + len( first )
-        end = s.index( last, start )
-        return s[start:end]
-    except ValueError:
-        return ""
-def pick(title):
-    try:
-        out = subprocess.check_output(['zenity', '--title="'+title+'"', '--color-selection']).decode("utf-8")
-    except:
-        exit(-1)
-
-    if out != "":
-        rgb = tuple(map(int, find_between(out, "rgb(", ")").split(',')))
-        return RGBToHTMLColor(rgb)
-    return
-
-if __name__ == "__main__":
-    color = pick("Color")
-    print(color)
+    w = QWidget()
+    w.resize(250, 250)
+    w.move(300, 300)
+    w.setWindowTitle(n)
+    w.show()
+    c = QColorDialog.getColor()
+    if c.isValid():
+        return c.name()[1:].upper()
+    sys.exit(app.exec_())

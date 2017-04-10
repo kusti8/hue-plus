@@ -3,11 +3,10 @@ import sys
 import os
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
 from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QListWidgetItem
 
 from . import hue_gui
-from . import picker
 from . import hue
 import serial
 
@@ -46,6 +45,11 @@ def find_between( s, first, last ):
         return s[start:end]
     except ValueError:
         return ""
+
+def pick(n):
+    c = QColorDialog.getColor()
+    if c.isValid():
+        return c.name()[1:].upper()
 
 class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
     def __init__(self):
@@ -118,7 +122,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.fixedList.count() == 1:
             self.error("Fixed cannot have more than one color")
         else:
-            color = "#" + picker.pick("Color").lower()
+            color = "#" + pick("Color").lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -138,7 +142,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## Breathing
     def breathingAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
+        color = "#" + pick("Color").lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
@@ -157,7 +161,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## Fading
     def fadingAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
+        color = "#" + pick("Color").lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
@@ -179,7 +183,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.marqueeList.count() == 1:
             self.error("Marquee cannot have more than one color")
         else:
-            color = "#" + picker.pick("Color").lower()
+            color = "#" + pick("Color").lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -201,7 +205,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## coverMarquee
     def coverMarqueeAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
+        color = "#" + pick("Color").lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
@@ -221,7 +225,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## pulse
     def pulseAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
+        color = "#" + pick("Color").lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
@@ -253,7 +257,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.alternatingList.count() == 2:
             self.error("Alternating cannot have more than two colors")
         else:
-            color = "#" + picker.pick("Color").lower()
+            color = "#" + pick("Color").lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -281,7 +285,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.candleList.count() == 1:
             self.error("Candle cannot have more than 1 color")
         else:
-            color = "#" + picker.pick("Color").lower()
+            color = "#" + pick("Color").lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -302,7 +306,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.wingsList.count() == 1:
             self.error("Wings cannot have more than 1 color")
         else:
-            color = "#" + picker.pick("Color").lower()
+            color = "#" + pick("Color").lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -321,7 +325,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## audio_level
     def audioLevelAddFunc(self):
-        color = "#" + picker.pick("Color").lower()
+        color = "#" + pick("Color").lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
