@@ -20,7 +20,7 @@ class OverrideInstall(install):
                 os.chmod(filepath, mode)
 
 setup(name='hue_plus',
-      version='1.0.6',
+      version='1.0.7',
       description='A utility to control the NZXT Hue+ in Linux',
       classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -50,6 +50,7 @@ setup(name='hue_plus',
         'GUI': ["PyQt5"],
         'Audio': ["pyaudio"],
       },
+      keywords = ['nzxt', 'hue', 'hue-plus', 'hue_plus', 'hue+']
       include_package_data=True,
       zip_safe=False,
       cmdclass={'install': OverrideInstall})
