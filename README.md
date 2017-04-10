@@ -5,9 +5,12 @@ A Linux driver in Python for the NZXT Hue+
 ![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
 ![Alternating](https://github.com/kusti8/hue-plus/raw/master/alternating.png)
 ## Install
-To install it system wide, simply run install.sh as root `sudo ./install.sh`
+To install it system wide, simply install using pip:
+```
+sudo pip3 install hue_plus
+```
 
-Now it will be available as `hue` and `hue-picker` or `hue-ui` for the GUI.
+Now it will be available as `hue` or `hue_ui` for the GUI.
 **To use the GUI you must have zenity and PyQt5 installed. Ex: `sudo apt-get install zenity python-pyqt5`**
 
 ### Arch Linux
