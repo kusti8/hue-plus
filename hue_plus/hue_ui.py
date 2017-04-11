@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 import os
+import types
+import ctypes
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
@@ -10,11 +12,30 @@ from . import hue_gui
 from . import hue
 import serial
 
-import webcolors
+from . import webcolors
+
+def is_admin():
+    if os.name == 'nt':
+        # WARNING: requires Windows XP SP2 or higher!
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin()
+        except:
+            return False
+    else:
+        return True
+
+def runAsAdmin():
+
+    if os.name != 'nt':
+        return
+    else:
+        ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, "", None, 1)
 
 def main():
     #if os.geteuid() != 0:
     #    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
+    #if not is_admin():
+    #    runAsAdmin()
     app = QApplication(sys.argv)
     form = MainWindow()
     form.show()
@@ -92,6 +113,9 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.audioLevelDelete.clicked.connect(self.audioLevelDeleteFunc)
         self.applyBtn.clicked.connect(self.applyFunc)
 
+        if os.name == 'nt':
+            self.portTxt.setText('COM3')
+
     def error(self, message):
         msg = QMessageBox()
         msg.setText(message)
@@ -132,13 +156,16 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.fixedList.takeItem(self.fixedList.currentRow())
 
     def fixedApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            print("Applying")
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                print(self.getColors(self.fixedList)[0], self.getChannel())
-                hue.fixed(ser, 0, self.getChannel(), self.getColors(self.fixedList)[0])
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                print("Applying")
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    print(self.getColors(self.fixedList)[0], self.getChannel())
+                    hue.fixed(ser, 0, self.getChannel(), self.getColors(self.fixedList)[0])
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## Breathing
     def breathingAddFunc(self):
@@ -152,12 +179,15 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.breathingList.takeItem(self.breathingList.currentRow())
 
     def breathingApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.breathingSpeed.value()
-                hue.breathing(ser, 0, self.getChannel(), self.getColors(self.breathingList), speed)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.breathingSpeed.value()
+                    hue.breathing(ser, 0, self.getChannel(), self.getColors(self.breathingList), speed)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## Fading
     def fadingAddFunc(self):
@@ -171,12 +201,15 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.fadingList.takeItem(self.fadingList.currentRow())
 
     def fadingApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.fadingSpeed.value()
-                hue.fading(ser, 0, self.getChannel(), self.getColors(self.fadingList), speed)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.fadingSpeed.value()
+                    hue.fading(ser, 0, self.getChannel(), self.getColors(self.fadingList), speed)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## Marquee
     def marqueeAddFunc(self):
@@ -193,15 +226,18 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.marqueeList.takeItem(self.marqueeList.currentRow())
 
     def marqueeApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                print(self.getChannel())
-                speed = self.marqueeSpeed.value()
-                size = self.marqueeSize.value()
-                direction = 0 if self.marqueeBackwards.isChecked() else 0
-                hue.marquee(ser, 0, self.getChannel(), self.getColors(self.marqueeList)[0], speed, size, direction)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    print(self.getChannel())
+                    speed = self.marqueeSpeed.value()
+                    size = self.marqueeSize.value()
+                    direction = 0 if self.marqueeBackwards.isChecked() else 0
+                    hue.marquee(ser, 0, self.getChannel(), self.getColors(self.marqueeList)[0], speed, size, direction)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## coverMarquee
     def coverMarqueeAddFunc(self):
@@ -215,13 +251,16 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.coverMarqueeList.takeItem(self.coverMarqueeList.currentRow())
 
     def coverMarqueeApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.coverMarqueeSpeed.value()
-                direction = 0 if self.coverMarqueeBackwards.isChecked() else 0
-                hue.cover_marquee(ser, 0, self.getChannel(), self.getColors(self.coverMarqueeList), speed, direction)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.coverMarqueeSpeed.value()
+                    direction = 0 if self.coverMarqueeBackwards.isChecked() else 0
+                    hue.cover_marquee(ser, 0, self.getChannel(), self.getColors(self.coverMarqueeList), speed, direction)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## pulse
     def pulseAddFunc(self):
@@ -235,22 +274,28 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.pulseList.takeItem(self.pulseList.currentRow())
 
     def pulseApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.pulseSpeed.value()
-                hue.pulse(ser, 0, self.getChannel(), self.getColors(self.pulseList), speed)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.pulseSpeed.value()
+                    hue.pulse(ser, 0, self.getChannel(), self.getColors(self.pulseList), speed)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## spectrum
     def spectrumApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.spectrumSpeed.value()
-                direction = 1 if self.spectrumBackwards.isChecked() else 0
-                hue.spectrum(ser, self.getChannel(), speed, direction)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.spectrumSpeed.value()
+                    direction = 1 if self.spectrumBackwards.isChecked() else 0
+                    hue.spectrum(ser, self.getChannel(), speed, direction)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## alternating
     def alternatingAddFunc(self):
@@ -267,19 +312,21 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.alternatingList.takeItem(self.alternatingList.currentRow())
 
     def alternatingApply(self):
-        if self.alternatingList.count() != 2:
-            self.error("Alternating must have two colors")
-        else:
-            with serial.Serial(self.portTxt.text(), 256000) as ser:
-                if self.getChannel() == None:
-                    hue.power(ser, 0, "off")
-                else:
-                    speed = self.alternatingSpeed.value()
-                    size = self.alternatingSize.value()
-                    direction = 1 if self.alternatingBackwards.isChecked() else 0
-                    moving = self.alternatingMoving.isChecked()
-                    hue.alternating(ser, 0, self.getChannel(), self.getColors(self.alternatingList), speed, size, moving, direction)
-
+        try:
+            if self.alternatingList.count() != 2:
+                self.error("Alternating must have two colors")
+            else:
+                with serial.Serial(self.portTxt.text(), 256000) as ser:
+                    if self.getChannel() == None:
+                        hue.power(ser, 0, "off")
+                    else:
+                        speed = self.alternatingSpeed.value()
+                        size = self.alternatingSize.value()
+                        direction = 1 if self.alternatingBackwards.isChecked() else 0
+                        moving = self.alternatingMoving.isChecked()
+                        hue.alternating(ser, 0, self.getChannel(), self.getColors(self.alternatingList), speed, size, moving, direction)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
     ## candle
     def candleAddFunc(self):
         if self.candleList.count() == 1:
@@ -295,11 +342,14 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.candleList.takeItem(self.candleList.currentRow())
 
     def candleApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                hue.candlelight(ser, 0, self.getChannel(), self.getColors(self.candleList)[0])
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    hue.candlelight(ser, 0, self.getChannel(), self.getColors(self.candleList)[0])
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## wings
     def wingsAddFunc(self):
@@ -316,12 +366,15 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.wingsList.takeItem(self.wingsList.currentRow())
 
     def wingsApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                speed = self.wingsSpeed.value()
-                hue.wings(ser, 0, self.getChannel(), self.getColors(self.wingsList)[0], speed)
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.wingsSpeed.value()
+                    hue.wings(ser, 0, self.getChannel(), self.getColors(self.wingsList)[0], speed)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## audio_level
     def audioLevelAddFunc(self):
@@ -335,13 +388,19 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.audioLevelList.takeItem(self.audioLevelList.currentRow())
 
     def audioLevelApply(self):
-        with serial.Serial(self.portTxt.text(), 256000) as ser:
-            if self.getChannel() == None:
-                hue.power(ser, 0, "off")
-            else:
-                tolerance = float(self.audioLevelTolerance.value())
-                smooth = int(self.audioLevelTolerance.value())
-                hue.audio_level(ser, 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth)
+        if os.name() == 'nt':
+            self.error("Audio mode not supported on Windows")
+            return
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    tolerance = float(self.audioLevelTolerance.value())
+                    smooth = int(self.audioLevelTolerance.value())
+                    hue.audio_level(ser, 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
 
     def applyFunc(self):

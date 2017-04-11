@@ -14,7 +14,10 @@ class OverrideInstall(install):
                 log.info("Overriding setuptools mode of scripts ...")
                 log.info("Changing ownership of %s to uid:%s gid %s" %
                          (filepath, uid, gid))
-                os.chown(filepath, uid, gid)
+                try:
+                    os.chown(filepath, uid, gid)
+                except:
+                    pass
                 log.info("Changing permissions of %s to %s" %
                          (filepath, mode))
                 os.chmod(filepath, mode)
@@ -44,7 +47,6 @@ setup(name='hue_plus',
       },
       install_requires=[
           'pyserial',
-          'webcolors',
           'pyqt5',
           'pyaudio',
       ],

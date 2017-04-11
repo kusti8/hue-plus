@@ -7,6 +7,8 @@ import os
 import shutil
 import pickle
 
+from . import webcolors
+
 def determine_path():
     """Borrowed from wxglade.py"""
     try:
@@ -20,6 +22,12 @@ def determine_path():
         sys.exit()
 
 path = determine_path() + "/things/previous.p"
+if 'site-packages' not in path: # Windows EXE install
+    path = os.getenv('APPDATA') + '/hue_plus/previous.p'
+    if not os.path.exists(os.getenv('APPDATA')+'/hue_plus'):
+        os.makedirs(os.getenv('APPDATA')+'/hue_plus')
+    if not os.path.isfile(path):
+        shutil.copyfile(determine_path()+'/things/previous.p', path)
 
 def changer_to_two(changer):
     line1 = []
