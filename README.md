@@ -1,20 +1,20 @@
 # hue-plus
 ## Now with audio sync support!
+[![Build status](https://ci.appveyor.com/api/projects/status/5u1902hw1hqtlldb?svg=true)](https://ci.appveyor.com/project/kusti8/hue-plus)
 A Linux driver in Python for the NZXT Hue+
 
 ![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
 ![Alternating](https://github.com/kusti8/hue-plus/raw/master/alternating.png)
 ## Install
+### Windows
+There is always an easy exe installer available here:
+https://github.com/kusti8/hue-plus/releases/latest
+### Linux
 To install it system wide, simply install using pip:
 ```
 sudo pip3 install hue_plus
 ```
-
 Now it will be available as `hue` or `hue_ui` for the GUI.
-**To use the GUI you must have zenity and PyQt5 installed. Ex: `sudo apt-get install zenity python-pyqt5`**
-
-### Arch Linux
-Arch Linux users can install hue-plus from the AUR: https://aur.archlinux.org/packages/hue-plus-git/
 
 ## Quick Start
 Each mode accepts different arguments, so it's easiest to just read the usage.
