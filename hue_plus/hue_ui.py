@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+VERSION="1.1.0"
 import sys
 import os
 import types
 import ctypes
+import urllib.request
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
@@ -71,6 +73,8 @@ def pick(n):
     c = QColorDialog.getColor()
     if c.isValid():
         return c.name()[1:].upper()
+def versiontuple(v):
+    return tuple(map(int, (v.split("."))))
 
 class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
     def __init__(self):
@@ -115,12 +119,19 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
         if os.name == 'nt':
             self.portTxt.setText('COM3')
+        self.update()
 
     def error(self, message):
         msg = QMessageBox()
         msg.setText(message)
         msg.setStandardButtons(QMessageBox.Ok)
         out = msg.exec_()
+
+    def update(self):
+        with urllib.request.urlopen('https://raw.githubusercontent.com/kusti8/hue-plus/master/version') as response:
+            version_new = response.read().strip()'
+            if versiontuple(version_new) > versiontuple(VERSION):
+                self.error("There is a new update available. Download it from https://github.com/kusti8/hue-plus")
 
     def getChannel(self):
         if self.channel1Check.isChecked() and self.channel2Check.isChecked():
