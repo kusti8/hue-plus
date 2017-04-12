@@ -22,7 +22,7 @@ def determine_path():
         sys.exit()
 
 path = determine_path() + "/things/previous.p"
-if 'site-packages' not in path: # Windows EXE install
+if 'site-packages' not in path and os.name == 'nt': # Windows EXE install
     path = os.getenv('APPDATA') + '/hue_plus/previous.p'
     if not os.path.exists(os.getenv('APPDATA')+'/hue_plus'):
         os.makedirs(os.getenv('APPDATA')+'/hue_plus')
