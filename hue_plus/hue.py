@@ -318,7 +318,7 @@ def strips_info(ser, channel):
 
 
 def init(ser):
-    C0(ser)
+    #C0(ser)
     # Took out bytearray([70, 0, 192, 0, 0, 0, 255])
     initial = [bytearray.fromhex("4B" + "00"*124)]
     for array in initial:
