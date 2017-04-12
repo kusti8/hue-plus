@@ -129,7 +129,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def update(self):
         with urllib.request.urlopen('https://raw.githubusercontent.com/kusti8/hue-plus/master/version') as response:
-            version_new = response.read().strip()'
+            version_new = response.read().strip()
             if versiontuple(version_new) > versiontuple(VERSION):
                 self.error("There is a new update available. Download it from https://github.com/kusti8/hue-plus")
 
