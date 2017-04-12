@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'hue-gui.ui'
 #
-# Created by: PyQt5 UI code generator 5.8
+# Created by: PyQt5 UI code generator 5.8.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -11,24 +11,24 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(946, 580)
+        MainWindow.resize(1161, 580)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.channel1Check = QtWidgets.QCheckBox(self.centralwidget)
-        self.channel1Check.setGeometry(QtCore.QRect(10, 10, 91, 17))
+        self.channel1Check.setGeometry(QtCore.QRect(10, 10, 161, 17))
         self.channel1Check.setChecked(True)
         self.channel1Check.setObjectName("channel1Check")
         self.channel2Check = QtWidgets.QCheckBox(self.centralwidget)
-        self.channel2Check.setGeometry(QtCore.QRect(10, 30, 91, 17))
+        self.channel2Check.setGeometry(QtCore.QRect(10, 30, 151, 17))
         self.channel2Check.setChecked(True)
         self.channel2Check.setObjectName("channel2Check")
         self.modeWidget = QtWidgets.QTabWidget(self.centralwidget)
-        self.modeWidget.setGeometry(QtCore.QRect(10, 50, 921, 451))
+        self.modeWidget.setGeometry(QtCore.QRect(10, 50, 1131, 451))
         self.modeWidget.setObjectName("modeWidget")
         self.presetTab = QtWidgets.QWidget()
         self.presetTab.setObjectName("presetTab")
         self.presetModeWidget = QtWidgets.QTabWidget(self.presetTab)
-        self.presetModeWidget.setGeometry(QtCore.QRect(6, 9, 901, 411))
+        self.presetModeWidget.setGeometry(QtCore.QRect(6, 9, 1101, 411))
         self.presetModeWidget.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.presetModeWidget.setObjectName("presetModeWidget")
         self.fixedTab = QtWidgets.QWidget()
@@ -404,13 +404,13 @@ class Ui_MainWindow(object):
         self.presetModeWidget.addTab(self.audioLevelTab, "")
         self.modeWidget.addTab(self.presetTab, "")
         self.applyBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.applyBtn.setGeometry(QtCore.QRect(310, 510, 101, 41))
+        self.applyBtn.setGeometry(QtCore.QRect(490, 510, 101, 41))
         self.applyBtn.setObjectName("applyBtn")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(110, 20, 62, 20))
+        self.label.setGeometry(QtCore.QRect(730, 20, 62, 20))
         self.label.setObjectName("label")
         self.portTxt = QtWidgets.QLineEdit(self.centralwidget)
-        self.portTxt.setGeometry(QtCore.QRect(150, 20, 113, 28))
+        self.portTxt.setGeometry(QtCore.QRect(800, 20, 113, 28))
         self.portTxt.setObjectName("portTxt")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>946</width>
+    <width>1161</width>
     <height>580</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>91</width>
+      <width>161</width>
       <height>17</height>
      </rect>
     </property>
@@ -35,7 +35,7 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>91</width>
+      <width>151</width>
       <height>17</height>
      </rect>
     </property>
@@ -51,7 +51,7 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>921</width>
+      <width>1131</width>
       <height>451</height>
      </rect>
     </property>
@@ -67,7 +67,7 @@
        <rect>
         <x>6</x>
         <y>9</y>
-        <width>901</width>
+        <width>1101</width>
         <height>411</height>
        </rect>
       </property>
@@ -1478,7 +1478,7 @@
    <widget class="QPushButton" name="applyBtn">
     <property name="geometry">
      <rect>
-      <x>310</x>
+      <x>490</x>
       <y>510</y>
       <width>101</width>
       <height>41</height>
@@ -1491,7 +1491,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>110</x>
+      <x>730</x>
       <y>20</y>
       <width>62</width>
       <height>20</height>
@@ -1504,7 +1504,7 @@
    <widget class="QLineEdit" name="portTxt">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>800</x>
       <y>20</y>
       <width>113</width>
       <height>28</height>
