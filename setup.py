@@ -50,7 +50,7 @@ setup(name='hue_plus',
           'pyqt5',
           'pyaudio',
       ],
-      keywords = ['nzxt', 'hue', 'hue-plus', 'hue_plus', 'hue+'],
+      keywords = 'nzxt hue hue-plus hue_plus hue+',
       include_package_data=True,
       zip_safe=False,
       cmdclass={'install': OverrideInstall})

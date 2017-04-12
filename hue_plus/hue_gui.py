@@ -426,7 +426,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "hue_plus"))
         self.channel1Check.setText(_translate("MainWindow", "Channel 1"))
         self.channel2Check.setText(_translate("MainWindow", "Channel 2"))
         self.groupBox.setTitle(_translate("MainWindow", "Colors"))

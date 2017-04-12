@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>hue_plus</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QCheckBox" name="channel1Check">
