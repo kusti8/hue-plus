@@ -54,9 +54,9 @@ build_script:
   # Build the compiled extension
   - "%CMD_IN_ENV% pynsist installer.cfg"
 
-test_script: off
+test_script:
 
-after_test: off
+after_test:
 
 artifacts:
   # Archive the generated packages in the ci.appveyor.com build report.
