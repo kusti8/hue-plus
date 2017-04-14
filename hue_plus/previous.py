@@ -39,25 +39,49 @@ def changer_to_two(changer):
     return [line1, line2]
 
 
-def write(line1, line2):
+def write(line1, line2, profiles):
     global path
-    pickle.dump([line1, line2], open(path, 'wb'))
+    pickle.dump(([line1, line2], profiles), open(path, 'wb'))
 
 
 def get_colors(channel, changer):
     """Get the previous colors stored so channel 2 stays the same"""
-    data = pickle.load(open(path, 'rb'))
+    data, profiles = pickle.load(open(path, 'rb'))
     if channel == 0:
         #print(changer)
         # Changer[0] is list of commands for first channel
-        write(changer[0], changer[1])
+        write(changer[0], changer[1], profiles)
         return [changer[0], changer[1]]
     elif channel == 1:
-        write(changer[0], data[1])
+        write(changer[0], data[1], profiles)
         return [changer[0], data[1]]  # Return the original one channel and the previous second channel
     elif channel == 2:
-        write(data[0], changer[0])
+        write(data[0], changer[0], profiles)
         return [data[0], changer[0]]
+
+def add_profile(name):
+    data, profiles = pickle.load(open(path, 'rb'))
+    profiles[name] = data
+    write(data[0], data[1], profiles)
+
+def list_profile():
+    data, profiles = pickle.load(open(path, 'rb'))
+    return(list(profiles))
+
+def rm_profile(name):
+    data, profiles = pickle.load(open(path, 'rb'))
+    try:
+        del profiles[name]
+    except:
+        pass
+    write(data[0], data[1], profiles)
+
+def apply_profile(name):
+    data, profiles = pickle.load(open(path, 'rb'))
+    try:
+        return profiles[name]
+    except:
+        pass
 
 
 if __name__ == '__main__':

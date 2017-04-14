@@ -1472,6 +1472,99 @@
         </widget>
        </widget>
       </widget>
+      <widget class="QWidget" name="profileTab">
+       <attribute name="title">
+        <string>Profiles</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_14">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>421</width>
+          <height>361</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Profiles</string>
+        </property>
+        <widget class="QListWidget" name="profileList">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="profileAdd">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>50</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add profile</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="profileDelete">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>90</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete profile</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="profileRefresh">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>130</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="profileName">
+         <property name="geometry">
+          <rect>
+           <x>300</x>
+           <y>50</y>
+           <width>113</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>profile1</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_3">
+         <property name="geometry">
+          <rect>
+           <x>220</x>
+           <y>50</y>
+           <width>62</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Name:</string>
+         </property>
+        </widget>
+       </widget>
+      </widget>
      </widget>
     </widget>
    </widget>

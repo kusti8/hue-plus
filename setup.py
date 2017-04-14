@@ -23,7 +23,7 @@ class OverrideInstall(install):
                 os.chmod(filepath, mode)
 
 setup(name='hue_plus',
-      version='1.1.0',
+      version='1.1.5',
       description='A utility to control the NZXT Hue+ in Linux',
       classifiers=[
         'Development Status :: 5 - Production/Stable',

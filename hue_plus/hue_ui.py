@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION="1.1.0"
+VERSION="1.1.5"
 import sys
 import os
 import types
@@ -93,7 +93,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             7: self.alternatingApply,
             8: self.candleApply,
             9: self.wingsApply,
-            10: self.audioLevelApply
+            10: self.audioLevelApply,
+            11: self.profileApply
             }
 
         self.fixedAdd.clicked.connect(self.fixedAddFunc)
@@ -116,6 +117,9 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.wingsDelete.clicked.connect(self.wingsDeleteFunc)
         self.audioLevelAdd.clicked.connect(self.audioLevelAddFunc)
         self.audioLevelDelete.clicked.connect(self.audioLevelDeleteFunc)
+        self.profileAdd.clicked.connect(self.profileAddFunc)
+        self.profileDelete.clicked.connect(self.profileDeleteFunc)
+        self.profileRefresh.clicked.connect(self.profileListFunc)
         self.applyBtn.clicked.connect(self.applyFunc)
 
         if os.name == 'nt':
@@ -126,6 +130,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             self.portTxt.setText(self.get_port())
         else:
             self.error("No Hue+ found.")
+
+        self.profileListFunc()
 
     def error(self, message):
         msg = QMessageBox()
@@ -453,6 +459,31 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
+    ## profile
+    def profileAddFunc(self):
+        hue.profile_add(self.profileName.text())
+        self.profileList.addItem(QListWidgetItem(self.profileName.text()))
+
+    def profileDeleteFunc(self):
+        hue.profile_rm(self.profileList.currentItem().text())
+        self.audioLevelList.takeItem(self.profileList.currentRow())
+        self.profileListFunc()
+
+    def profileApply(self):
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    hue.profile_apply(ser, self.profileList.currentItem().text())
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
+
+    def profileListFunc(self):
+        self.profileList.clear()
+        if hue.profile_list():
+            for p in hue.profile_list():
+                self.profileList.addItem(QListWidgetItem(p))
 
     def applyFunc(self):
         self.indexApply[self.presetModeWidget.currentIndex()]()

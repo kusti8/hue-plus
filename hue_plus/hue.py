@@ -74,6 +74,20 @@ def main():
     parser_power = subparsers.add_parser('power', help="Control power to the channels")
     parser_power.add_argument("state", type=str, help="State (on/off)")
 
+    parser_profile = subparsers.add_parser('profile', help="Add or remove or apply profiles")
+    subparsers_profile = parser_profile.add_subparsers(help="The type of profile action", dest='profile_command')
+
+    parser_profile_add = subparsers_profile.add_parser('add', help="Add a profile of the current")
+    parser_profile_add.add_argument("name", type=str, help="Name of the profile")
+
+    parser_profile_remove = subparsers_profile.add_parser('rm', help="Remove a profile of the current")
+    parser_profile_remove.add_argument("name", type=str, help="Name of the profile")
+
+    parser_profile_list = subparsers_profile.add_parser('list', help="List the profiles")
+
+    parser_profile_apply = subparsers_profile.add_parser('apply', help="Apply a profile")
+    parser_profile_apply.add_argument("name", type=str, help="Name of the profile")
+
     args = parser.parse_args()
 
     ser = serial.Serial(args.port, 256000)
@@ -102,6 +116,18 @@ def main():
         audio_level(ser, args.gui, args.channel, args.colors, args.tolerance, args.refresh)
     elif args.command == 'power':
         power(ser, args.channel, args.state)
+    elif args.command == 'profile':
+        if args.profile_command == 'add':
+            profile_add(args.name)
+        elif args.profile_command == 'rm':
+            profile_rm(args.name)
+        elif args.profile_command == 'apply':
+            profile_apply(ser, args.name)
+        elif args.profile_command == 'list':
+            profile_list()
+        else:
+            print("INVALID COMMAND")
+            sys.exit(-1)
     else:
         print("INVALID COMMAND")
         sys.exit(-1)
@@ -468,6 +494,21 @@ def power(ser, channel, state):
     else:
         print("INVALID STATE!")
         sys.exit(-1)
+
+def profile_add(name):
+    previous.add_profile(name)
+
+def profile_rm(name):
+    previous.rm_profile(name)
+
+def profile_list():
+    print(previous.list_profile())
+    return previous.list_profile()
+
+def profile_apply(ser, name):
+    commands = previous.apply_profile(name)
+    init(ser)
+    write(ser, commands)
 
 if __name__ == '__main__':
     main()
