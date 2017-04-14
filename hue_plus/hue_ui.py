@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QList
 from . import hue_gui
 from . import hue
 import serial
+from serial.tools import list_ports
 
 from . import webcolors
 
@@ -120,12 +121,27 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if os.name == 'nt':
             self.portTxt.setText('COM3')
         self.update()
+        port = self.get_port()
+        if port:
+            self.portTxt.setText(self.get_port())
+        else:
+            self.error("No Hue+ found.")
 
     def error(self, message):
         msg = QMessageBox()
         msg.setText(message)
         msg.setStandardButtons(QMessageBox.Ok)
         out = msg.exec_()
+
+    def get_port(self):
+        ports = []
+        for port in list_ports.comports():
+            if 'MCP2200' in port[1]:
+                ports.append(port[0])
+        if ports:
+            return ports[0]
+        else:
+            return None
 
     def update(self):
         with urllib.request.urlopen('https://raw.githubusercontent.com/kusti8/hue-plus/master/version') as response:

@@ -520,4 +520,3 @@ class Ui_MainWindow(object):
         self.applyBtn.setText(_translate("MainWindow", "Apply"))
         self.label.setText(_translate("MainWindow", "Port:"))
         self.portTxt.setText(_translate("MainWindow", "/dev/ttyACM0"))
-
