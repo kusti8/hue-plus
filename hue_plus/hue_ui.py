@@ -157,7 +157,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.fixedList.count() == 1:
             self.error("Fixed cannot have more than one color")
         else:
-            color = "#" + pick("Color").lower()
+            hex_color = pick("Color")
+            if hex_color is None:
+                return
+            color = "#" + hex_color.lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -202,7 +205,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## Fading
     def fadingAddFunc(self):
-        color = "#" + pick("Color").lower()
+        hex_color = pick("Color")
+        if hex_color is None:
+            return
+        color = "#" + hex_color.lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
@@ -227,7 +233,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.marqueeList.count() == 1:
             self.error("Marquee cannot have more than one color")
         else:
-            color = "#" + pick("Color").lower()
+            hex_color = pick("Color")
+            if hex_color is None:
+                return
+            color = "#" + hex_color.lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -252,7 +261,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## coverMarquee
     def coverMarqueeAddFunc(self):
-        color = "#" + pick("Color").lower()
+        hex_color = pick("Color")
+        if hex_color is None:
+            return
+        color = "#" + hex_color.lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
@@ -313,7 +325,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.alternatingList.count() == 2:
             self.error("Alternating cannot have more than two colors")
         else:
-            color = "#" + pick("Color").lower()
+            hex_color = pick("Color")
+            if hex_color is None:
+                return
+            color = "#" + hex_color.lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -343,7 +358,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.candleList.count() == 1:
             self.error("Candle cannot have more than 1 color")
         else:
-            color = "#" + pick("Color").lower()
+            hex_color = pick("Color")
+            if hex_color is None:
+                return
+            color = "#" + hex_color.lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -367,7 +385,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         if self.wingsList.count() == 1:
             self.error("Wings cannot have more than 1 color")
         else:
-            color = "#" + pick("Color").lower()
+            hex_color = pick("Color")
+            if hex_color is None:
+                return
+            color = "#" + hex_color.lower()
             actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
             if not actual:
                 actual = closest
@@ -389,7 +410,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## audio_level
     def audioLevelAddFunc(self):
-        color = "#" + pick("Color").lower()
+        hex_color = pick("Color")
+        if hex_color is None:
+            return
+        color = "#" + hex_color.lower()
         actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
         if not actual:
             actual = closest
