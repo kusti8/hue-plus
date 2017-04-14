@@ -1,5 +1,6 @@
 # hue-plus
 ## Now with audio sync support!
+Support me on patreon: https://www.patreon.com/kusti8
 [![Build status](https://ci.appveyor.com/api/projects/status/5u1902hw1hqtlldb?svg=true)](https://ci.appveyor.com/project/kusti8/hue-plus)
 A Linux driver in Python for the NZXT Hue+
 
