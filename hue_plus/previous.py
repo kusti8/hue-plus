@@ -43,10 +43,18 @@ def write(line1, line2, profiles):
     global path
     pickle.dump(([line1, line2], profiles), open(path, 'wb'))
 
+def read():
+    global path
+    out = pickle.load(open(path, 'rb'))
+    if type(out) is tuple:
+        return out
+    else:
+        return (out, {})
+
 
 def get_colors(channel, changer):
     """Get the previous colors stored so channel 2 stays the same"""
-    data, profiles = pickle.load(open(path, 'rb'))
+    data, profiles = read()
     if channel == 0:
         #print(changer)
         # Changer[0] is list of commands for first channel
@@ -60,16 +68,16 @@ def get_colors(channel, changer):
         return [data[0], changer[0]]
 
 def add_profile(name):
-    data, profiles = pickle.load(open(path, 'rb'))
+    data, profiles = read()
     profiles[name] = data
     write(data[0], data[1], profiles)
 
 def list_profile():
-    data, profiles = pickle.load(open(path, 'rb'))
+    data, profiles = read()
     return(list(profiles))
 
 def rm_profile(name):
-    data, profiles = pickle.load(open(path, 'rb'))
+    data, profiles = read()
     try:
         del profiles[name]
     except:
@@ -77,7 +85,7 @@ def rm_profile(name):
     write(data[0], data[1], profiles)
 
 def apply_profile(name):
-    data, profiles = pickle.load(open(path, 'rb'))
+    data, profiles = read()
     try:
         return profiles[name]
     except:
