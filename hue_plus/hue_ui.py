@@ -132,6 +132,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             self.error("No Hue+ found.")
 
         self.profileListFunc()
+        hue.write(ser, previous.get_previous()) # Set the previous colors
 
     def error(self, message):
         msg = QMessageBox()

@@ -67,6 +67,10 @@ def get_colors(channel, changer):
         write(data[0], changer[0], profiles)
         return [data[0], changer[0]]
 
+def get_previous():
+    data, profiles = read()
+    return data
+
 def add_profile(name):
     data, profiles = read()
     profiles[name] = data
