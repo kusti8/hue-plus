@@ -132,7 +132,11 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             self.error("No Hue+ found.")
 
         self.profileListFunc()
-        hue.write(ser, previous.get_previous()) # Set the previous colors
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                hue.write_previous(ser)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     def error(self, message):
         msg = QMessageBox()

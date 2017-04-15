@@ -510,5 +510,8 @@ def profile_apply(ser, name):
     init(ser)
     write(ser, commands)
 
+def write_previous(ser):
+    write(ser, previous.get_previous())
+
 if __name__ == '__main__':
     main()
