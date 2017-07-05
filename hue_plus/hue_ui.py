@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION="1.1.5"
+VERSION="1.1.8"
 import sys
 import os
 import types

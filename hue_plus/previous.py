@@ -6,6 +6,7 @@ import sys
 import os
 import shutil
 import pickle
+from appdirs import *
 
 from . import webcolors
 
@@ -21,13 +22,14 @@ def determine_path():
         print("There is no __file__ variable. Please contact the author.")
         sys.exit()
 
-path = determine_path() + "/things/previous.p"
-if 'site-packages' not in path and os.name == 'nt': # Windows EXE install
-    path = os.getenv('APPDATA') + '/hue_plus/previous.p'
-    if not os.path.exists(os.getenv('APPDATA')+'/hue_plus'):
-        os.makedirs(os.getenv('APPDATA')+'/hue_plus')
-    if not os.path.isfile(path):
-        shutil.copyfile(determine_path()+'/things/previous.p', path)
+path = os.path.join(determine_path(), "things", "previous.p")
+local = user_data_dir('hue_plus', 'kusti8')
+if not os.path.exists(local):
+    os.makedirs(local)
+local = os.path.join(local, 'previous.p')
+if not os.path.isfile(local):
+    shutil.copyfile(path, local)
+path = local
 
 def changer_to_two(changer):
     line1 = []

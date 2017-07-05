@@ -3,27 +3,8 @@ from setuptools.command.install import install
 from distutils import log # needed for outputting information messages
 import os
 
-class OverrideInstall(install):
-    def run(self):
-        uid, gid = 0, 0
-        mode = 0o777
-        install.run(self) # calling install.run(self) insures that everything that happened previously still happens, so the installation does not break!
-        # here we start with doing our overriding and private magic ..
-        for filepath in self.get_outputs():
-            if 'previous.p' in filepath:
-                log.info("Overriding setuptools mode of scripts ...")
-                log.info("Changing ownership of %s to uid:%s gid %s" %
-                         (filepath, uid, gid))
-                try:
-                    os.chown(filepath, uid, gid)
-                except:
-                    pass
-                log.info("Changing permissions of %s to %s" %
-                         (filepath, mode))
-                os.chmod(filepath, mode)
-
 setup(name='hue_plus',
-      version='1.1.5',
+      version='1.1.8',
       description='A utility to control the NZXT Hue+ in Linux',
       classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -49,8 +30,8 @@ setup(name='hue_plus',
           'pyserial',
           'pyqt5',
           'pyaudio',
+          'appdirs'
       ],
       keywords = 'nzxt hue hue-plus hue_plus hue+',
       include_package_data=True,
-      zip_safe=False,
-      cmdclass={'install': OverrideInstall})
+      zip_safe=False)
