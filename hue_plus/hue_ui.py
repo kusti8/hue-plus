@@ -516,8 +516,9 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             actual = closest
         
         for widgetItem in self.customTable.selectedItems():
-            widgetItem.setText(actual + "(" + color + ")")
-            widgetItem.setBackground(QColor(*webcolors.hex_to_rgb(color)))
+            if widgetItem.column() != 0:
+                widgetItem.setText(actual + "(" + color + ")")
+                widgetItem.setBackground(QColor(*webcolors.hex_to_rgb(color)))
 
     def customGetColors(self):
         colors = []
