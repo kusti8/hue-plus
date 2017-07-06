@@ -207,7 +207,7 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
     import pyaudio
     import wave
 
-    chunk = 1024
+    chunk = 2048
     FORMAT = pyaudio.paInt16
     CHANNELS = 1
     RATE = 44100
