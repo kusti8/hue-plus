@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION="1.1.8"
+VERSION="1.2.0"
 import sys
 import os
 import types
@@ -8,7 +8,7 @@ import urllib.request
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
-from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QListWidgetItem
+from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QListWidgetItem, QTableWidgetItem
 
 from . import hue_gui
 from . import hue
@@ -94,7 +94,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             8: self.candleApply,
             9: self.wingsApply,
             10: self.audioLevelApply,
-            11: self.profileApply
+            11: self.customApply,
+            12: self.profileApply
             }
 
         self.fixedAdd.clicked.connect(self.fixedAddFunc)
@@ -117,10 +118,13 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.wingsDelete.clicked.connect(self.wingsDeleteFunc)
         self.audioLevelAdd.clicked.connect(self.audioLevelAddFunc)
         self.audioLevelDelete.clicked.connect(self.audioLevelDeleteFunc)
+        self.customEdit.clicked.connect(self.customEditFunc)
         self.profileAdd.clicked.connect(self.profileAddFunc)
         self.profileDelete.clicked.connect(self.profileDeleteFunc)
         self.profileRefresh.clicked.connect(self.profileListFunc)
         self.applyBtn.clicked.connect(self.applyFunc)
+
+        self.populateCustom()
 
         if os.name == 'nt':
             self.portTxt.setText('COM3')
@@ -492,6 +496,45 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def applyFunc(self):
         self.indexApply[self.presetModeWidget.currentIndex()]()
+
+    # custom
+    def populateCustom(self):
+        actual, closest = get_colour_name(webcolors.hex_to_rgb('#FFFFFF'))
+        if not actual:
+            actual = closest
+        for i in range(40):
+            self.customTable.setItem(i, 0, QTableWidgetItem(str(i+1)))
+            self.customTable.setItem(i, 1, QTableWidgetItem(actual + '(#FFFFFF)'))
+
+    def customEditFunc(self):
+        hex_color = pick("Color")
+        if hex_color is None:
+            return
+        color = "#" + hex_color.lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        
+        for widgetItem in self.customTable.selectedItems():
+            widgetItem.setText(actual + "(" + color + ")")
+            widgetItem.setBackground(QColor(*webcolors.hex_to_rgb(color)))
+
+    def customGetColors(self):
+        colors = []
+        for i in range(40):
+            colors.append(find_between(self.customTable.item(i, 1).text(), '#', ')').upper())
+        return colors
+
+    def customApply(self):
+        try:
+            with serial.Serial(self.portTxt.text(), 256000) as ser:
+                if self.getChannel() == None:
+                    hue.power(ser, 0, "off")
+                else:
+                    speed = self.customSpeed.value()
+                    hue.custom(ser, 0, self.getChannel(), self.customGetColors(), self.customMode.currentText().lower(), speed)
+        except serial.serialutil.SerialException:
+            self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
 if __name__ == '__main__':
     main()

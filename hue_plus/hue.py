@@ -12,6 +12,13 @@ import struct
 import math
 import colorsys
 
+# Exceptions
+class InvalidCommand(Exception):
+    pass
+
+class InvalidUser(Exception):
+    pass
+
 def main():
     #if os.geteuid() != 0:
     #    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
@@ -71,6 +78,11 @@ def main():
     parser_audio_level.add_argument("refresh", type=int, help="The speed of refreshing the LEDs (usually 5 is a good number)")
     parser_audio_level.add_argument("colors", type=str, nargs='+', help="Colors in hex, starting from lowest volume to highest")
 
+    parser_custom = subparsers.add_parser('custom', help="Custom light for each individual LED")
+    parser_custom.add_argument("mode", type=str, help="A choice of modes for custom of fixed, breathing, or wave")
+    parser_custom.add_argument("speed", type=int, help="Speed from 0(Slowest) to 4(Fastest)")
+    parser_custom.add_argument("colors", type=str, nargs='+', help="Colors in hex, starting from lowest volume to highest")
+
     parser_power = subparsers.add_parser('power', help="Control power to the channels")
     parser_power.add_argument("state", type=str, help="State (on/off)")
 
@@ -114,6 +126,8 @@ def main():
         wings(ser, args.gui, args.channel, args.color, args.speed)
     elif args.command == 'audio_level':
         audio_level(ser, args.gui, args.channel, args.colors, args.tolerance, args.refresh)
+    elif args.command == 'custom':
+        custom(ser, args.gui, args.channel, args.colors, args.mode, args.speed)
     elif args.command == 'power':
         power(ser, args.channel, args.state)
     elif args.command == 'profile':
@@ -126,11 +140,9 @@ def main():
         elif args.profile_command == 'list':
             profile_list()
         else:
-            print("INVALID COMMAND")
-            sys.exit(-1)
+            raise InvalidCommand("No such profile command")
     else:
-        print("INVALID COMMAND")
-        sys.exit(-1)
+        raise InvalidCommand("No such mode")
 
 def write_audio(ser, channel, colors, tolerance, value, strips):
     try:
@@ -169,7 +181,7 @@ def write_audio(ser, channel, colors, tolerance, value, strips):
 
 def audio_level(ser, gui, channel, colors, tolerance, smooth):
     if os.geteuid() == 0:
-        sys.exit("Audio won't work with root. Login as a normal user, add your user to the group of /dev/ttyACM0 and retry without root")
+       raise InvalidUser("Audio won't work with root. Login as a normal user, add your user to the group of /dev/ttyACM0 and retry without root")
     if 1 <= gui <= 8:
         colors = []
         for i in range(gui):
@@ -247,7 +259,10 @@ def create_custom(ser, channel, colors, mode, direction, option, group, speed, s
     commands = []
     channel_commands = []
     modes = {
-        "audio": 14
+        "audio": 14,
+        "fixed": 0,
+        "breathing": 7,
+        "wave": 13
     }
     if modes[mode] != 14: # Audio flickers when initing, not needed
         init(ser)
@@ -492,8 +507,23 @@ def power(ser, channel, state):
     elif state.lower() == 'off':
         fixed(ser, 0, channel, "000000")
     else:
-        print("INVALID STATE!")
-        sys.exit(-1)
+        raise InvalidCommand("No such power state")
+
+def custom(ser, gui, channel, colors, mode, speed):
+    strips = [strips_info(ser, 1), strips_info(ser, 2)]
+
+    if mode not in ['fixed', 'breathing', 'wave']:
+        raise InvalidCommand("No such mode for custom")
+
+    if 1 <= gui <= 40:
+        colors = []
+        for i in range(gui):
+            colors.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
+
+    command = create_custom(ser, channel, colors, mode, 0, 0, 0, speed, strips)
+    outputs = previous.get_colors(channel, command)
+    write(ser, outputs)
+
 
 def profile_add(name):
     previous.add_profile(name)

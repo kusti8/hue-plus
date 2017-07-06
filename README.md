@@ -1,7 +1,9 @@
 # hue-plus
-## Now with audio sync support!
+## Now with custom LED support and a developer library!
 Support me on patreon: https://www.patreon.com/kusti8
+
 [![Build status](https://ci.appveyor.com/api/projects/status/5u1902hw1hqtlldb?svg=true)](https://ci.appveyor.com/project/kusti8/hue-plus)
+
 A Linux driver in Python for the NZXT Hue+
 
 ![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
@@ -29,181 +31,39 @@ Basic usage is shown below.
 ### Set a specific channel
 `sudo hue -c 1 fixed FFFFFF` where 1 is channel one and 2 is channel two
 ## Usage
-```
-usage: hue [-h] [-p PORT] [-c CHANNEL] [-g GUI]
-           {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,audio_level,power}
-           ...
-
-Change NZXT Hue+ LEDs
-
-positional arguments:
-  {fixed,breathing,fading,marquee,cover_marquee,pulse,spectrum,alternating,candlelight,wings,audio_level,power}
-                        The type of color (fixed, breathing)
-    fixed               One single fixed color
-    breathing           Breathing through a set of colors
-    fading              Fading through a set of colors
-    marquee             A strip of color running
-    cover_marquee       A strip of color running (multiple colors)
-    pulse               Pulsing through a set of colors
-    spectrum            Pulsing through a set of colors
-    alternating         Two alternating colors
-    candlelight         A flickering color
-    wings               Strips of light meeting in the center
-    audio_level         Light syncronized to music levels
-    power               Control power to the channels
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -p PORT, --port PORT  The port, defaults to /dev/ttyACM0
-  -c CHANNEL, --channel CHANNEL
-                        The channel, defaults to 0 (BOTH)
-  -g GUI, --gui GUI     How many colors of GUI picker
-```
-### Fixed
-```
-usage: hue fixed [-h] color
-
-positional arguments:
-  color       Color in hex
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Breathing
-```
-usage: hue breathing [-h] speed colors [colors ...]
-
-positional arguments:
-  speed       Speed from 0(Slowest) to 4(Fastest)
-  colors      Color(s) in hex
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Fading
-```
-usage: hue fading [-h] speed colors [colors ...]
-
-positional arguments:
-  speed       Speed from 0(Slowest) to 4(Fastest)
-  colors      Color(s) in hex
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Marquee
-```
-usage: hue marquee [-h] [-b] speed size color
-
-positional arguments:
-  speed            Speed from 0(Slowest) to 4(Fastest)
-  size             The size of the group of runners (0=3, 1=4, 2=5, 3=6)
-  color            Foreground color in hex
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -b, --backwards  Enable going backwards
-```
-### Covering Marquee
-```
-usage: hue cover_marquee [-h] [-b] speed colors [colors ...]
-
-positional arguments:
-  speed            Speed from 0(Slowest) to 4(Fastest)
-  colors           Colors in hex
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -b, --backwards  Enable going backwards
-```
-### Pulse
-```
-usage: hue pulse [-h] speed colors [colors ...]
-
-positional arguments:
-  speed       Speed from 0(Slowest) to 4(Fastest)
-  colors      Color(s) in hex
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Spectrum
-```
-usage: hue spectrum [-h] [-b] speed
-
-positional arguments:
-  speed            Speed from 0(Slowest) to 4(Fastest)
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -b, --backwards  Enable going backwards
-```
-### Alternating
-```
-usage: hue alternating [-h] [-m] [-b] speed size colors colors
-
-positional arguments:
-  speed            Speed from 0(Slowest) to 4(Fastest)
-  size             The size of the group of runners (0=2, 1=3, 2=5, 3=10)
-  colors           First and second colors in hex
-
-optional arguments:
-  -h, --help       show this help message and exit
-  -m, --moving     Enable movement
-  -b, --backwards  Enable going backwards (requires movement)
-```
-### Candlelight
-```
-usage: hue candlelight [-h] color
-
-positional arguments:
-  color       Color in hex
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Wings
-```
-usage: hue wings [-h] speed color
-
-positional arguments:
-  speed       Speed from 0(Slowest) to 4(Fastest)
-  color       Color in hex
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Audio (requires PyAudio and nonroot)
-```
-usage: hue audio_level [-h] tolerance refresh colors [colors ...]
-
-positional arguments:
-  tolerance   The maximum audio level ie. when the audio is as loud as
-              tolerance, all LEDs will be lit
-  refresh     The speed of refreshing the LEDs (usually 5 is a good number)
-  colors      Colors in hex, starting from lowest volume to highest
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-### Power
-```
-usage: hue power [-h] state
-
-positional arguments:
-  state       State (on/off)
-
-optional arguments:
-  -h, --help  show this help message and exit
-```
-
-
-And then to have a simple color picker (you must have zenity installed):
-`hue-picker`
+All help and usage can be found by running ``hue -h``
 
 *The default hue.py now includes the color selector, simply set -g to however many colors you want*
 ## Limitations
-No Audio, FPS, CPU temp, GPU temp or Custom, but other than that a perfect replica.
+No FPS, CPU temp, or GPU temp, but other than that a perfect replica.
+
+## Developers
+Hue_plus can easily be integrated into existing software. The entire codebase is separated into simple functions that separate all usage and can be directly called. The script provides a simple argument wrapper around them, but they are easily usable. **I highly suggest you read through the main ``hue.py`` file, specifically ``hue.main()`` to get acquianted with how to use it. Each function is slightly different.**
+
+### Quickstart
+
+```
+import serial
+import hue_plus
+
+ser = serial.Serial(args.port, 256000)
+hue_plus.fixed(ser, 0, 0, 'FF0000') # First argument is ser, second is whether to bring up GUI (0=no), third is channel (0=both) and last is the color
+```
+
+### Common args
+
+Argument name | Description
+--- | ---
+ser | The serial object, created as shown above
+gui | How many colors to select in the GUI, 0 is none
+channel | The channel number to use, 1 or 2, 0 is both
+color(s) | The color(s) to use. If accepts more than 1 color, then in a list (`['FF0000', '00FF00']`)
+speed | The speed, from 0 (Slowest) to 4 (Fastest). 2 is normal
+size | The amount of LEDs to shine, from 0-3, where 0=3, 1=4, 2=5, 3=6
+direction | Supports going backwards, where backwards=1 and forwards=0. **Not supported in marquee or cover_marquee**
+moving | `true` or `false` if alternating looks like it is moving
+state | For power mode, either `'on'` or `'off'`
+mode | For custom mode, either `'fixed'`, `'breathing'`, or `'wave'`
 
 ## Warning
   I (the author) hold no liability for any broken or not working Hue+ by running this script. It is provided as is. It worked for me, but your milage may vary
