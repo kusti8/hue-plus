@@ -263,7 +263,10 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
                         value = int(math.sqrt(summ / 1470.0) / 10)
                         amps.append(value - delta)
                         summ = 0
-                        tarW=float(amps[0]*1.0/delta/100)
+                        if delta == 0:
+                            tarW=0.0
+                        else:
+                            tarW=float(amps[0]*1.0/delta/100)
                         s.append(tarW)
                         if len(s) >= smooth:
                             out = sum(s)/len(s)

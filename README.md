@@ -6,8 +6,9 @@ Support me on patreon: https://www.patreon.com/kusti8
 
 A **cross-platform** driver in Python for the NZXT Hue+. Supports **all functionality** except FPS, CPU, and GPU lighting.
 
-![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
+![Custom](https://github.com/kusti8/hue-plus/raw/master/custom.png)
 ![Windows](https://github.com/kusti8/hue-plus/raw/master/windows.png)
+![Profile](https://github.com/kusti8/hue-plus/raw/master/profile.png)
 ## Install
 ### Windows
 There is always an easy exe installer available here:
