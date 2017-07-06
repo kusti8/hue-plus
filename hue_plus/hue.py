@@ -3,10 +3,13 @@ import serial
 import time
 from time import sleep
 import sys
+import inspect
 import argparse
 import os
 from . import picker
 from . import previous
+#import picker
+#import previous
 import sys
 import struct
 import math
@@ -180,8 +183,17 @@ def write_audio(ser, channel, colors, tolerance, value, strips):
     write(ser, outputs)
 
 def audio_level(ser, gui, channel, colors, tolerance, smooth):
-    if os.geteuid() == 0:
-       raise InvalidUser("Audio won't work with root. Login as a normal user, add your user to the group of /dev/ttyACM0 and retry without root")
+    try:
+        if os.geteuid() == 0:
+            raise InvalidUser("Audio won't work with root. Login as a normal user, add your user to the group of /dev/ttyACM0 and retry without root")
+    except:
+        pass
+
+    ser_new = False
+    if not inspect.isclass(ser):
+        ser_new = True
+        ser = serial.Serial(ser, 256000)
+    
     if 1 <= gui <= 8:
         colors = []
         for i in range(gui):
@@ -202,12 +214,25 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
     RECORD_SECONDS = 500000
     WAVE_OUTPUT_FILENAME = "output.wav"
     p = pyaudio.PyAudio()
-    stream = p.open(format = FORMAT,
-                    channels = CHANNELS,
-                    rate = RATE,
-                    input = True,
-                    output = True,
-                    frames_per_buffer = chunk)
+    if os.name == 'nt':
+        index = p.get_default_input_device_info()['index']
+        for i in range(p.get_device_count()):
+            if 'Stereo Mix' in p.get_device_info_by_index(i)['name']:
+                index = i
+        stream = p.open(format = FORMAT,
+                        channels = CHANNELS,
+                        rate = RATE,
+                        input = True,
+                        output = True,
+                        frames_per_buffer = chunk,
+                        input_device_index=index)
+    else:
+        stream = p.open(format = FORMAT,
+                        channels = CHANNELS,
+                        rate = RATE,
+                        input = True,
+                        output = True,
+                        frames_per_buffer = chunk)
     alls = []
     s = []
     try:
@@ -251,6 +276,8 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
         p.terminate()
         os.remove(WAVE_OUTPUT_FILENAME)
         raise
+    if ser_new:
+        ser.close()
 
 def create_custom(ser, channel, colors, mode, direction, option, group, speed, strips):
     if colors == None:

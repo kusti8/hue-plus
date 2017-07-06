@@ -9,6 +9,7 @@ import pickle
 from appdirs import *
 
 from . import webcolors
+#import webcolors
 
 def determine_path():
     """Borrowed from wxglade.py"""

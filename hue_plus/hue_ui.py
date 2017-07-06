@@ -1,21 +1,30 @@
 #!/usr/bin/env python3
-VERSION="1.2.0"
+VERSION="1.3.0"
 import sys
+from time import sleep
 import os
 import types
 import ctypes
 import urllib.request
+import multiprocessing
+import queue
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
 from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QListWidgetItem, QTableWidgetItem
 
-from . import hue_gui
+from . import hue_gui 
 from . import hue
+#import hue_gui # REMEMBER TO CHANGE BACK
+#import hue
+
 import serial
 from serial.tools import list_ports
 
 from . import webcolors
+#import webcolors
+
+audio_lock = False
 
 def is_admin():
     if os.name == 'nt':
@@ -158,6 +167,15 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         else:
             return None
 
+    def checkAudio(self):
+        global audio_lock
+        global q
+        global audioThread
+        if audio_lock:
+            audioThread.terminate()
+            audio_lock = False
+            sleep(0.1)
+
     def update(self):
         with urllib.request.urlopen('https://raw.githubusercontent.com/kusti8/hue-plus/master/version') as response:
             version_new = response.read().strip()
@@ -201,13 +219,13 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.fixedList.takeItem(self.fixedList.currentRow())
 
     def fixedApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 print("Applying")
                 if self.getChannel() == None:
                     hue.power(ser, 0, "off")
                 else:
-                    print(self.getColors(self.fixedList)[0], self.getChannel())
                     hue.fixed(ser, 0, self.getChannel(), self.getColors(self.fixedList)[0])
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
@@ -224,6 +242,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.breathingList.takeItem(self.breathingList.currentRow())
 
     def breathingApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -249,6 +268,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.fadingList.takeItem(self.fadingList.currentRow())
 
     def fadingApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -277,12 +297,12 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.marqueeList.takeItem(self.marqueeList.currentRow())
 
     def marqueeApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
                     hue.power(ser, 0, "off")
                 else:
-                    print(self.getChannel())
                     speed = self.marqueeSpeed.value()
                     size = self.marqueeSize.value()
                     direction = 0 if self.marqueeBackwards.isChecked() else 0
@@ -305,6 +325,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.coverMarqueeList.takeItem(self.coverMarqueeList.currentRow())
 
     def coverMarqueeApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -328,6 +349,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.pulseList.takeItem(self.pulseList.currentRow())
 
     def pulseApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -340,6 +362,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     ## spectrum
     def spectrumApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -369,6 +392,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.alternatingList.takeItem(self.alternatingList.currentRow())
 
     def alternatingApply(self):
+        self.checkAudio()
         try:
             if self.alternatingList.count() != 2:
                 self.error("Alternating must have two colors")
@@ -402,6 +426,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.candleList.takeItem(self.candleList.currentRow())
 
     def candleApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -429,6 +454,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.wingsList.takeItem(self.wingsList.currentRow())
 
     def wingsApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -454,17 +480,22 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.audioLevelList.takeItem(self.audioLevelList.currentRow())
 
     def audioLevelApply(self):
-        if os.name() == 'nt':
-            self.error("Audio mode not supported on Windows")
-            return
+        global audio_lock
+        global audioThread
+        global q
+        if os.name == 'nt':
+            self.error("To enable audio mode on Windows, right click on the audio icon, go to recording devices, right click and select show disabled devices, and right click on stereo mix and click enable.")
+        self.checkAudio()
         try:
-            with serial.Serial(self.portTxt.text(), 256000) as ser:
-                if self.getChannel() == None:
-                    hue.power(ser, 0, "off")
-                else:
-                    tolerance = float(self.audioLevelTolerance.value())
-                    smooth = int(self.audioLevelTolerance.value())
-                    hue.audio_level(ser, 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth)
+            ser = serial.Serial(self.portTxt.text(), 256000)
+            if self.getChannel() == None:
+                hue.power(ser, 0, "off")
+            else:
+                tolerance = float(self.audioLevelTolerance.value())
+                smooth = int(self.audioLevelSmooth.value())
+                audioThread = multiprocessing.Process(target=hue.audio_level, args=(self.portTxt.text(), 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth))
+                audio_lock=True
+                audioThread.start()
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
@@ -479,6 +510,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.profileListFunc()
 
     def profileApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
@@ -527,6 +559,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         return colors
 
     def customApply(self):
+        self.checkAudio()
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 if self.getChannel() == None:
