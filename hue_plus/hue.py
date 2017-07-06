@@ -215,6 +215,7 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
     WAVE_OUTPUT_FILENAME = "output.wav"
     p = pyaudio.PyAudio()
     if os.name == 'nt':
+        chunk = 1024 # Windows doesn't like 2048 for some reason
         index = p.get_default_input_device_info()['index']
         for i in range(p.get_device_count()):
             if 'Stereo Mix' in p.get_device_info_by_index(i)['name']:
