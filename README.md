@@ -4,7 +4,7 @@ Support me on patreon: https://www.patreon.com/kusti8
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5u1902hw1hqtlldb?svg=true)](https://ci.appveyor.com/project/kusti8/hue-plus)
 
-A Linux driver in Python for the NZXT Hue+
+A **cross-platform** driver in Python for the NZXT Hue+. Supports **all functionality** except FPS, CPU, and GPU lighting.
 
 ![Fixed](https://github.com/kusti8/hue-plus/raw/master/fixed.png)
 ![Alternating](https://github.com/kusti8/hue-plus/raw/master/alternating.png)
