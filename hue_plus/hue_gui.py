@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '../hue-gui.ui'
+# Form implementation generated from reading ui file 'hue-gui.ui'
 #
 # Created by: PyQt5 UI code generator 5.8.2
 #
@@ -387,7 +387,7 @@ class Ui_MainWindow(object):
         self.audioLevelSmooth = QtWidgets.QDoubleSpinBox(self.groupBox_21)
         self.audioLevelSmooth.setGeometry(QtCore.QRect(10, 100, 68, 23))
         self.audioLevelSmooth.setDecimals(0)
-        self.audioLevelSmooth.setProperty("value", 5.0)
+        self.audioLevelSmooth.setProperty("value", 3.0)
         self.audioLevelSmooth.setObjectName("audioLevelSmooth")
         self.groupBox_10 = QtWidgets.QGroupBox(self.audioLevelTab)
         self.groupBox_10.setGeometry(QtCore.QRect(0, 0, 231, 361))
@@ -486,6 +486,13 @@ class Ui_MainWindow(object):
         self.portTxt = QtWidgets.QLineEdit(self.centralwidget)
         self.portTxt.setGeometry(QtCore.QRect(800, 20, 113, 28))
         self.portTxt.setObjectName("portTxt")
+        self.label_6 = QtWidgets.QLabel(self.centralwidget)
+        self.label_6.setGeometry(QtCore.QRect(220, 20, 441, 41))
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        self.label_6.setFont(font)
+        self.label_6.setWordWrap(True)
+        self.label_6.setObjectName("label_6")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -616,4 +623,5 @@ class Ui_MainWindow(object):
         self.applyBtn.setText(_translate("MainWindow", "Apply"))
         self.label.setText(_translate("MainWindow", "Port:"))
         self.portTxt.setText(_translate("MainWindow", "/dev/ttyACM0"))
+        self.label_6.setText(_translate("MainWindow", "Now with Audio support on Windows, a new custom mode, and many bug fixes!"))
 

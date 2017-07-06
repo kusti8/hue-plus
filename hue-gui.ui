@@ -1418,7 +1418,7 @@
           <number>0</number>
          </property>
          <property name="value">
-          <double>5.000000000000000</double>
+          <double>3.000000000000000</double>
          </property>
         </widget>
        </widget>
@@ -1826,6 +1826,27 @@
     </property>
     <property name="text">
      <string>/dev/ttyACM0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>20</y>
+      <width>441</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Now with Audio support on Windows, a new custom mode, and many bug fixes!</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
