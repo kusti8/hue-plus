@@ -151,6 +151,10 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
+    def closeEvent(self, event):
+        self.checkAudio()
+        event.accept()
+
     def error(self, message):
         msg = QMessageBox()
         msg.setText(message)
