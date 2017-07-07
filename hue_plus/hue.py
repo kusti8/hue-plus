@@ -9,7 +9,7 @@ import os
 from . import picker
 from . import previous
 #import picker
-#import previous
+#from . import previous
 import sys
 import struct
 import math
@@ -189,9 +189,7 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
     except:
         pass
 
-    ser_new = False
     if not inspect.isclass(ser):
-        ser_new = True
         ser = serial.Serial(ser, 256000)
     
     if 1 <= gui <= 8:
@@ -280,8 +278,6 @@ def audio_level(ser, gui, channel, colors, tolerance, smooth):
         p.terminate()
         os.remove(WAVE_OUTPUT_FILENAME)
         raise
-    if ser_new:
-        ser.close()
 
 def create_custom(ser, channel, colors, mode, direction, option, group, speed, strips):
     if colors == None:
@@ -555,6 +551,18 @@ def custom(ser, gui, channel, colors, mode, speed):
     outputs = previous.get_colors(channel, command)
     write(ser, outputs)
 
+def animated(ser, channel, colors, speed):
+    if not inspect.isclass(ser):
+        ser = serial.Serial(ser, 256000)
+    strips = [strips_info(ser, 1), strips_info(ser, 2)]
+    init(ser)
+    while True:
+        for round in colors:
+            command = create_custom(ser, channel, round, "audio", 0, 0, 0, 0, strips)
+            outputs = previous.get_colors(channel, command)
+            write(ser, outputs)
+            sleep(speed / 1000.0)
+
 
 def profile_add(name):
     previous.add_profile(name)
@@ -562,14 +570,13 @@ def profile_add(name):
 def profile_rm(name):
     previous.rm_profile(name)
 
-def profile_list():
-    print(previous.list_profile())
-    return previous.list_profile()
-
 def profile_apply(ser, name):
     commands = previous.apply_profile(name)
+    if type(commands) is dict:
+        return commands
     init(ser)
     write(ser, commands)
+    return None
 
 def write_previous(ser):
     write(ser, previous.get_previous())

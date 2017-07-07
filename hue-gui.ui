@@ -1786,6 +1786,332 @@
         </widget>
        </widget>
       </widget>
+      <widget class="QWidget" name="animatedTab">
+       <attribute name="title">
+        <string>Custom Animated</string>
+       </attribute>
+       <widget class="QGroupBox" name="groupBox_23">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>721</width>
+          <height>371</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Colors</string>
+        </property>
+        <widget class="QTableWidget" name="animatedTable">
+         <property name="geometry">
+          <rect>
+           <x>230</x>
+           <y>30</y>
+           <width>361</width>
+           <height>331</height>
+          </rect>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="dragDropOverwriteMode">
+          <bool>false</bool>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::ExtendedSelection</enum>
+         </property>
+         <property name="rowCount">
+          <number>40</number>
+         </property>
+         <property name="columnCount">
+          <number>2</number>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <column>
+          <property name="text">
+           <string>LED #</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Colors</string>
+          </property>
+         </column>
+        </widget>
+        <widget class="QPushButton" name="animatedEdit">
+         <property name="geometry">
+          <rect>
+           <x>610</x>
+           <y>40</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Edit Color</string>
+         </property>
+        </widget>
+        <widget class="QListWidget" name="animatedList">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>111</width>
+           <height>291</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="animatedDelete">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>80</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Delete round</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="animatedAdd">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>40</y>
+           <width>83</width>
+           <height>28</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Add round</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="animatedRoundName">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>120</y>
+           <width>81</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>round1</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_24">
+        <property name="geometry">
+         <rect>
+          <x>740</x>
+          <y>0</y>
+          <width>331</width>
+          <height>371</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Other</string>
+        </property>
+        <widget class="QLabel" name="label_66">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>201</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Speed between refresh, in ms</string>
+         </property>
+        </widget>
+        <widget class="QDoubleSpinBox" name="animatedSpeed">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>70</y>
+           <width>68</width>
+           <height>26</height>
+          </rect>
+         </property>
+         <property name="decimals">
+          <number>0</number>
+         </property>
+         <property name="minimum">
+          <double>15.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>5000.000000000000000</double>
+         </property>
+         <property name="singleStep">
+          <double>10.000000000000000</double>
+         </property>
+         <property name="value">
+          <double>50.000000000000000</double>
+         </property>
+        </widget>
+       </widget>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="timesTab">
+     <attribute name="title">
+      <string>Times</string>
+     </attribute>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>461</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>The time to turn off the lights (in 24 hour time, separated by a colon)</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="offTime">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>40</y>
+        <width>113</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00:00</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="onTime">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>100</y>
+        <width>113</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00:00</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>80</y>
+        <width>461</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>The time to turn on the lights (in 24 hour time, separated by a colon)</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_12">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>50</y>
+        <width>131</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00:00 means none</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_13">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>110</y>
+        <width>131</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>00:00 means none</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_14">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>190</y>
+        <width>341</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>This looks for a profile called previous and uses that. If that profile does not exist, the time will not work.</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="timeSave">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>290</y>
+        <width>82</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Save</string>
+      </property>
      </widget>
     </widget>
    </widget>
@@ -1843,7 +2169,7 @@
      </font>
     </property>
     <property name="text">
-     <string>Now with Audio support on Windows, a new custom mode, and many bug fixes!</string>
+     <string>Now with support for turning on and off at specific times, audio on Windows, a way to make your own modes, and more!</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>

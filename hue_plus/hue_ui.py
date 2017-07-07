@@ -4,27 +4,29 @@ import sys
 from time import sleep
 import os
 import types
+import functools
 import ctypes
 import urllib.request
 import multiprocessing
 import queue
-from PyQt5.QtCore import Qt
+import datetime
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
 from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QListWidgetItem, QTableWidgetItem
 
 from . import hue_gui 
 from . import hue
-#import hue_gui # REMEMBER TO CHANGE BACK
-#import hue
+from . import previous
+#from . import hue_gui # REMEMBER TO CHANGE BACK
+#from . import hue
 
 import serial
 from serial.tools import list_ports
 
-from . import webcolors
+import webcolors
 #import webcolors
 
-audio_lock = False
 
 def is_admin():
     if os.name == 'nt':
@@ -83,8 +85,16 @@ def pick(n):
     c = QColorDialog.getColor()
     if c.isValid():
         return c.name()[1:].upper()
+
 def versiontuple(v):
     return tuple(map(int, (v.split("."))))
+
+def time_in_range(start, end, x):
+    """Return true if x is in the range [start, end]"""
+    if start <= end:
+        return start <= x <= end
+    else:
+        return start <= x or x <= end
 
 class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
     def __init__(self):
@@ -104,8 +114,11 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             9: self.wingsApply,
             10: self.audioLevelApply,
             11: self.customApply,
-            12: self.profileApply
+            12: self.profileApply,
+            13: self.animatedApply
             }
+
+        self.animatedColors = []
 
         self.fixedAdd.clicked.connect(self.fixedAddFunc)
         self.fixedDelete.clicked.connect(self.fixedDeleteFunc)
@@ -131,9 +144,16 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.profileAdd.clicked.connect(self.profileAddFunc)
         self.profileDelete.clicked.connect(self.profileDeleteFunc)
         self.profileRefresh.clicked.connect(self.profileListFunc)
+        self.animatedAdd.clicked.connect(self.animatedAddFunc)
+        self.animatedDelete.clicked.connect(self.animatedDeleteFunc)
+        self.animatedEdit.clicked.connect(self.animatedEditFunc)
+        self.animatedList.itemSelectionChanged.connect(self.animatedRoundChangeFunc)
         self.applyBtn.clicked.connect(self.applyFunc)
 
+        self.timeSave.clicked.connect(self.timeSaveFunc)
+
         self.populateCustom()
+        self.populateAnimated()
 
         if os.name == 'nt':
             self.portTxt.setText('COM3')
@@ -145,11 +165,27 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             self.error("No Hue+ found.")
 
         self.profileListFunc()
+
         try:
             with serial.Serial(self.portTxt.text(), 256000) as ser:
                 hue.write_previous(ser)
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
+
+        times = previous.get_times()
+        self.offTime.setText(times[0])
+        self.onTime.setText(times[1])
+        self.offTimeTxt = times[0]
+        self.onTimeTxt = times[1]
+
+        self.doneOff = False
+        self.doneOn = False
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timeDaemon)
+        self.timer.start(1000*60)
+
+        self.audioThread = None
+        self.animatedThread = None
 
     def closeEvent(self, event):
         self.checkAudio()
@@ -172,13 +208,14 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             return None
 
     def checkAudio(self):
-        global audio_lock
-        global q
-        global audioThread
-        if audio_lock:
-            audioThread.terminate()
-            audio_lock = False
-            sleep(0.1)
+        if self.audioThread:
+            if self.audioThread.is_alive():
+                self.audioThread.terminate()
+                sleep(0.1)
+        if self.animatedThread:
+            if self.animatedThread.is_alive():
+                self.animatedThread.terminate()
+                sleep(0.1)
 
     def update(self):
         with urllib.request.urlopen('https://raw.githubusercontent.com/kusti8/hue-plus/master/version') as response:
@@ -204,6 +241,44 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             self.error("Must have at least one color")
             return ['FF0000']
         return colors
+
+    def timeDaemon(self):
+        pre = hue.profile_list()
+        if 'previous' in pre:
+            pre = 'previous'
+        else:
+            return
+        if self.onTimeTxt != "00:00" and self.offTimeTxt != "00:00":
+            onTime = datetime.datetime.strptime(self.onTimeTxt, '%H:%M').time()
+            offTime = datetime.datetime.strptime(self.offTimeTxt, '%H:%M').time()
+
+
+            if time_in_range(offTime, onTime, datetime.datetime.now().time()):
+                if not self.doneOff:
+                    try:
+                        with serial.Serial(self.portTxt.text(), 256000) as ser:
+                            print("Turning off")
+                            hue.power(ser, 0, 'off')
+                            self.doneOff = True
+                            self.doneOn = False
+                    except serial.serialutil.SerialException:
+                        self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
+            else:
+                if not self.doneOn:
+                    try:
+                        with serial.Serial(self.portTxt.text(), 256000) as ser:
+                            print("Turning on")
+                            hue.profile_apply(ser, pre)
+                            self.doneOn = True
+                            self.doneOff = False
+                    except serial.serialutil.SerialException:
+                        self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
+
+    ## Time
+    def timeSaveFunc(self):
+        self.onTimeTxt = self.onTime.text()
+        self.offTimeTxt = self.offTime.text()
+        previous.apply_times([self.offTimeTxt, self.onTimeTxt])
 
     ## Fixed
     def fixedAddFunc(self):
@@ -484,9 +559,6 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.audioLevelList.takeItem(self.audioLevelList.currentRow())
 
     def audioLevelApply(self):
-        global audio_lock
-        global audioThread
-        global q
         if os.name == 'nt':
             self.error("To enable audio mode on Windows, right click on the audio icon, go to recording devices, right click and select show disabled devices, and right click on stereo mix and click enable.")
         self.checkAudio()
@@ -497,15 +569,20 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             else:
                 tolerance = float(self.audioLevelTolerance.value())
                 smooth = int(self.audioLevelSmooth.value())
-                audioThread = multiprocessing.Process(target=hue.audio_level, args=(self.portTxt.text(), 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth))
-                audio_lock=True
-                audioThread.start()
+                self.audioThread = multiprocessing.Process(target=hue.audio_level, args=(self.portTxt.text(), 0, self.getChannel(), self.getColors(self.audioLevelList), tolerance, smooth))
+                self.audioThread.start()
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
 
     ## profile
     def profileAddFunc(self):
-        hue.profile_add(self.profileName.text())
+        if self.animatedThread:
+            if self.animatedThread.is_alive():
+                previous.write(customs={'name': self.profileName.text(),'colors': self.animatedColors, 'speed': self.animatedSpeed.value()})
+            else:
+                hue.profile_add(self.profileName.text())
+        else:
+            hue.profile_add(self.profileName.text())
         self.profileList.addItem(QListWidgetItem(self.profileName.text()))
 
     def profileDeleteFunc(self):
@@ -520,14 +597,20 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                 if self.getChannel() == None:
                     hue.power(ser, 0, "off")
                 else:
-                    hue.profile_apply(ser, self.profileList.currentItem().text())
+                    out = hue.profile_apply(ser, self.profileList.currentItem().text())
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
+        
+        if out:
+            self.animatedColors = out['colors']
+            self.animatedSpeed.setValue(out['speed'])
+            self.animatedApply()
 
     def profileListFunc(self):
         self.profileList.clear()
-        if hue.profile_list():
-            for p in hue.profile_list():
+        profiles = previous.list_profile()
+        if profiles:
+            for p in profiles:
                 self.profileList.addItem(QListWidgetItem(p))
 
     def applyFunc(self):
@@ -573,6 +656,62 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                     hue.custom(ser, 0, self.getChannel(), self.customGetColors(), self.customMode.currentText().lower(), speed)
         except serial.serialutil.SerialException:
             self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
+
+    # Animated
+    def populateAnimated(self):
+        actual, closest = get_colour_name(webcolors.hex_to_rgb('#FFFFFF'))
+        if not actual:
+            actual = closest
+        for i in range(40):
+            self.animatedTable.setItem(i, 0, QTableWidgetItem(str(i+1)))
+            self.animatedTable.setItem(i, 1, QTableWidgetItem(actual + '(#FFFFFF)'))
+
+    def populateAnimatedColors(self, colors):
+        for index, i in enumerate(colors):
+            actual, closest = get_colour_name(webcolors.hex_to_rgb('#' + i))
+            if not actual:
+                actual = closest
+            self.animatedTable.setItem(index, 0, QTableWidgetItem(str(index+1)))
+            self.animatedTable.setItem(index, 1, QTableWidgetItem(actual + '(#' + i + ')'))
+            self.animatedTable.item(index, 1).setBackground(QColor(*webcolors.hex_to_rgb('#' + i)))
+
+    def animatedEditFunc(self):
+        hex_color = pick("Color")
+        if hex_color is None:
+            return
+        color = "#" + hex_color.lower()
+        actual, closest = get_colour_name(webcolors.hex_to_rgb(color))
+        if not actual:
+            actual = closest
+        
+        for widgetItem in self.animatedTable.selectedItems():
+            if widgetItem.column() != 0:
+                widgetItem.setText(actual + "(" + color + ")")
+                widgetItem.setBackground(QColor(*webcolors.hex_to_rgb(color)))
+                if self.animatedList.currentRow() != -1:
+                    self.animatedColors[self.animatedList.currentRow()][widgetItem.row()] = color[1:]
+
+    def animatedGetColors(self):
+        colors = []
+        for i in range(40):
+            colors.append(find_between(self.animatedTable.item(i, 1).text(), '#', ')').upper())
+        return colors
+
+    def animatedAddFunc(self):
+        self.animatedList.addItem(QListWidgetItem(self.animatedRoundName.text()))
+        self.animatedColors.append(['FFFFFF'] * 40)
+
+    def animatedDeleteFunc(self):
+        self.animatedList.takeItem(self.animatedList.currentRow())
+        self.animatedColors.pop(self.animatedList.currentRow())
+
+    def animatedRoundChangeFunc(self):
+        self.populateAnimatedColors(self.animatedColors[self.animatedList.currentRow()])
+
+    def animatedApply(self):
+        self.checkAudio()
+        self.animatedThread = multiprocessing.Process(target=hue.animated, args=(self.portTxt.text(), self.getChannel(), self.animatedColors, self.animatedSpeed.value()))
+        self.animatedThread.start()
 
 if __name__ == '__main__':
     main()

@@ -7,96 +7,115 @@ import os
 import shutil
 import pickle
 from appdirs import *
+from PyQt5.QtCore import QSettings
 
 from . import webcolors
 #import webcolors
 
-def determine_path():
-    """Borrowed from wxglade.py"""
-    try:
-        root = __file__
-        if os.path.islink(root):
-            root = os.path.realpath(root)
-        return os.path.dirname (os.path.abspath(root))
-    except:
-        print("I'm sorry, but something is wrong.")
-        print("There is no __file__ variable. Please contact the author.")
-        sys.exit()
+settings = QSettings('kusti8', 'hue_plus')
 
-path = os.path.join(determine_path(), "things", "previous.p")
-local = user_data_dir('hue_plus', 'kusti8')
-if not os.path.exists(local):
-    os.makedirs(local)
-local = os.path.join(local, 'previous.p')
-if not os.path.isfile(local):
-    shutil.copyfile(path, local)
-path = local
-
-def changer_to_two(changer):
-    line1 = []
-    line2 = []
-    for line in changer:
-        line1.append(line[:3] + '1' + line[4:])
-        line2.append(line[:3] + '2' + line[4:])
-    write(line1, line2)
-    return [line1, line2]
-
-
-def write(line1, line2, profiles):
-    global path
-    pickle.dump(([line1, line2], profiles), open(path, 'wb'))
+def write(line1='None', line2='None', profiles='None', times='None', customs='None'):
+    global settings
+    if line1 != 'None':
+        settings.setValue('line1', line1)
+    if line2 != 'None':
+        settings.setValue('line2', line2)
+    if profiles != 'None':
+        settings.setValue('profiles', profiles)
+    if times != 'None':
+        settings.setValue('times', times)
+    if customs != 'None':
+        settings.setValue('customs', customs)
 
 def read():
-    global path
-    out = pickle.load(open(path, 'rb'))
-    if type(out) is tuple:
-        return out
-    else:
-        return (out, {})
+    global settings
+    out = {}
+    for i in ['line1', 'line2', 'profiles', 'times', 'customs']:
+        out[i] = settings.value(i)
+    return out
 
 
 def get_colors(channel, changer):
     """Get the previous colors stored so channel 2 stays the same"""
-    data, profiles = read()
     if channel == 0:
         #print(changer)
         # Changer[0] is list of commands for first channel
-        write(changer[0], changer[1], profiles)
+        write(changer[0], changer[1])
         return [changer[0], changer[1]]
     elif channel == 1:
-        write(changer[0], data[1], profiles)
-        return [changer[0], data[1]]  # Return the original one channel and the previous second channel
+        line2 = read()['line2']
+        write(changer[0], line2)
+        return [changer[0], line2]  # Return the original one channel and the previous second channel
     elif channel == 2:
-        write(data[0], changer[0], profiles)
-        return [data[0], changer[0]]
+        line1 = read()['line1']
+        write(line1, changer[0])
+        return [line1, changer[0]]
 
 def get_previous():
-    data, profiles = read()
+    data = [read()['line1'], read()['line2']]
     return data
 
 def add_profile(name):
-    data, profiles = read()
+    data = [read()['line1'], read()['line2']]
+    profiles = read()['profiles']
     profiles[name] = data
     write(data[0], data[1], profiles)
 
 def list_profile():
-    data, profiles = read()
-    return(list(profiles))
+    profiles = read()['profiles']
+    customs = read()['customs']
+    if profiles:
+        p = list(profiles)
+        if customs:
+            p.append(customs['name'])
+            return p
+        else:
+            return p
+    else:
+        return []
 
 def rm_profile(name):
-    data, profiles = read()
+    profiles = read()['profiles']
+    customs = read()['customs']
     try:
         del profiles[name]
     except:
-        pass
-    write(data[0], data[1], profiles)
+        if customs:
+            customs = {}
+    write(profiles=profiles, customs=customs)
 
 def apply_profile(name):
-    data, profiles = read()
+    profiles = read()['profiles']
+    customs = read()['customs']
     try:
         return profiles[name]
     except:
-        pass
+        if customs:
+            return customs
+
+def get_times():
+    times = read()['times']
+    return times
+
+def apply_times(time):
+    data = [read()['line1'], read()['line2']]
+    write(data[0], data[1])
+
+def init():
+    global settings
+    out = read()
+    if not out['line1']:
+        write(line1=[bytearray(b'K\x01\x02\x02\x04\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff')])
+    if not out['line2']:
+        write(line2=[bytearray(b'K\x02\x02\x00\x04\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff\x00\x00\xff')])
+    if not out['profiles']:
+        write(profiles={})
+    if not out['times']:
+        write(times=['00:00', '00:00'])
+    if not out['customs']:
+        write(customs={})
+
+init()
 
 
 if __name__ == '__main__':
