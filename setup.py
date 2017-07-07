@@ -4,7 +4,7 @@ from distutils import log # needed for outputting information messages
 import os
 
 setup(name='hue_plus',
-      version='1.3.0',
+      version='1.4.0',
       description='A utility to control the NZXT Hue+ in Linux',
       classifiers=[
         'Development Status :: 5 - Production/Stable',
