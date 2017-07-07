@@ -15,17 +15,22 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import QGridLayout, QLabel, QLineEdit, QMessageBox, QColorDialog
 from PyQt5.QtWidgets import QTextEdit, QWidget, QMainWindow, QApplication, QListWidgetItem, QTableWidgetItem
 
-from . import hue_gui 
-from . import hue
-from . import previous
+package_import = True
+if package_import:
+    from . import hue_gui 
+    from . import hue
+    from . import previous
+    from . import webcolors
+else:
+    import hue_gui
+    import hue
+    import previous
+    import webcolors
 #from . import hue_gui # REMEMBER TO CHANGE BACK
 #from . import hue
 
 import serial
 from serial.tools import list_ports
-
-import webcolors
-#import webcolors
 
 
 def is_admin():
@@ -243,7 +248,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         return colors
 
     def timeDaemon(self):
-        pre = hue.profile_list()
+        pre = previous.list_profile()
         if 'previous' in pre:
             pre = 'previous'
         else:
@@ -255,6 +260,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
             if time_in_range(offTime, onTime, datetime.datetime.now().time()):
                 if not self.doneOff:
+                    self.checkAudio()
                     try:
                         with serial.Serial(self.portTxt.text(), 256000) as ser:
                             print("Turning off")
@@ -265,6 +271,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                         self.error("Serial port is invalid. Try /dev/ttyACM0 for Linux or COM3 or COM4 for Windows")
             else:
                 if not self.doneOn:
+                    self.checkAudio()
                     try:
                         with serial.Serial(self.portTxt.text(), 256000) as ser:
                             print("Turning on")

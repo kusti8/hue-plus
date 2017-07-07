@@ -1993,6 +1993,22 @@
           <double>50.000000000000000</double>
          </property>
         </widget>
+        <widget class="QLabel" name="label_21">
+         <property name="geometry">
+          <rect>
+           <x>40</x>
+           <y>130</y>
+           <width>261</width>
+           <height>71</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>To use, simply set a custom pattern for each round.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
        </widget>
       </widget>
      </widget>
@@ -2083,9 +2099,9 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>190</y>
+        <y>140</y>
         <width>341</width>
-        <height>61</height>
+        <height>111</height>
        </rect>
       </property>
       <property name="font">
@@ -2131,7 +2147,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>940</x>
       <y>20</y>
       <width>62</width>
       <height>20</height>
@@ -2144,7 +2160,7 @@
    <widget class="QLineEdit" name="portTxt">
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>1000</x>
       <y>20</y>
       <width>113</width>
       <height>28</height>
@@ -2159,7 +2175,7 @@
      <rect>
       <x>180</x>
       <y>-10</y>
-      <width>501</width>
+      <width>741</width>
       <height>91</height>
      </rect>
     </property>

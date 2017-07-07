@@ -9,8 +9,11 @@ import pickle
 from appdirs import *
 from PyQt5.QtCore import QSettings
 
-from . import webcolors
-#import webcolors
+package_import = True
+if package_import:
+    from . import webcolors
+else:
+    import webcolors
 
 settings = QSettings('kusti8', 'hue_plus')
 
@@ -98,8 +101,7 @@ def get_times():
     return times
 
 def apply_times(time):
-    data = [read()['line1'], read()['line2']]
-    write(data[0], data[1])
+    write(times=time)
 
 def init():
     global settings

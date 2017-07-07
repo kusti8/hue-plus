@@ -6,10 +6,13 @@ import sys
 import inspect
 import argparse
 import os
-from . import picker
-from . import previous
-#import picker
-#from . import previous
+package_import = True
+if package_import:
+    from . import picker
+    from . import previous
+else:
+    import picker
+    import previous
 import sys
 import struct
 import math
