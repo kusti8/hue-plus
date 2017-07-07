@@ -1,5 +1,5 @@
 # hue-plus
-## Now with custom LED support and a developer library!
+## Now with custom LED, audio mode on Windows, turning on and off based on time, and a custom mode builder and a developer library, plus bug fixes!
 Support me on patreon: https://www.patreon.com/kusti8
 
 [![Build status](https://ci.appveyor.com/api/projects/status/5u1902hw1hqtlldb?svg=true)](https://ci.appveyor.com/project/kusti8/hue-plus)
