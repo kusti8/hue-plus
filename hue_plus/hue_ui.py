@@ -204,8 +204,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
     def get_port(self):
         ports = []
-        self.error(list_ports.comports())
         for port in list_ports.comports():
+            self.error(str(port))
             if 'MCP2200' in port[1] or 'USB Serial Device' in port[1]:
                 ports.append(port[0])
         if ports:
