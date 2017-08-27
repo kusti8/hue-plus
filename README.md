@@ -14,6 +14,7 @@ A **cross-platform** driver in Python for the NZXT Hue+. Supports **all function
 There is always an easy exe installer available here:
 https://github.com/kusti8/hue-plus/releases/latest
 ### Linux
+You must have `python3-dev` and `portaudio19-dev` installed!
 To install it system wide, simply install using pip:
 ```
 sudo pip3 install hue_plus
