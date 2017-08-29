@@ -92,6 +92,9 @@ def main():
     parser_power = subparsers.add_parser('power', help="Control power to the channels")
     parser_power.add_argument("state", type=str, help="State (on/off)")
 
+    parser_unitled = subparsers.add_parser('unitled', help="Control power to the unit LED")
+    parser_unitled.add_argument("state", type=str, help="State (on/off)")
+
     parser_profile = subparsers.add_parser('profile', help="Add or remove or apply profiles")
     subparsers_profile = parser_profile.add_subparsers(help="The type of profile action", dest='profile_command')
 
@@ -136,6 +139,8 @@ def main():
         custom(ser, args.gui, args.channel, args.colors, args.mode, args.speed)
     elif args.command == 'power':
         power(ser, args.channel, args.state)
+    elif args.command == 'unitled':
+        unitled(ser, args.state)
     elif args.command == 'profile':
         if args.profile_command == 'add':
             profile_add(args.name)
@@ -538,6 +543,17 @@ def power(ser, channel, state):
         fixed(ser, 0, channel, "000000")
     else:
         raise InvalidCommand("No such power state")
+
+def unitled(ser, state):
+    outputs = [70, 0, 192, 0, 0, 0, 0]
+    if state.lower() == 'on':
+        outputs[6] = 255
+    elif state.lower() == 'off':
+        outputs[5] = 255
+    else:
+        raise InvalidCommand("No such unit led state")
+    ser.write(bytearray(outputs))
+    ser.read()
 
 def custom(ser, gui, channel, colors, mode, speed):
     strips = [strips_info(ser, 1), strips_info(ser, 2)]

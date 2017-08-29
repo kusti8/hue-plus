@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION="1.4.1"
+VERSION="1.4.2"
 import sys
 from time import sleep
 import os
@@ -125,6 +125,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
 
         self.animatedColors = []
 
+        self.unitLEDBtn.clicked.connect(self.toggleUnitLED)
+
         self.fixedAdd.clicked.connect(self.fixedAddFunc)
         self.fixedDelete.clicked.connect(self.fixedDeleteFunc)
         self.breathingAdd.clicked.connect(self.breathingAddFunc)
@@ -192,6 +194,8 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.audioThread = None
         self.animatedThread = None
 
+        self.unitLED = 'on'
+
     def closeEvent(self, event):
         self.checkAudio()
         event.accept()
@@ -247,6 +251,15 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
             return ['FF0000']
         return colors
 
+    def toggleUnitLED(self):
+        if self.unitLED == 'on':
+            self.unitLED = 'off'
+        else:
+            self.unitLED = 'on'
+
+        with serial.Serial(self.portTxt.text(), 256000) as ser:
+            hue.unitled(ser, self.unitLED)
+
     def timeDaemon(self):
         pre = previous.list_profile()
         if 'previous' in pre:
@@ -265,6 +278,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                         with serial.Serial(self.portTxt.text(), 256000) as ser:
                             print("Turning off")
                             hue.power(ser, 0, 'off')
+                            hue.unitled(ser, 'off')
                             self.doneOff = True
                             self.doneOn = False
                     except serial.serialutil.SerialException:
@@ -276,6 +290,7 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
                         with serial.Serial(self.portTxt.text(), 256000) as ser:
                             print("Turning on")
                             hue.profile_apply(ser, pre)
+                            hue.unitled(ser, 'on')
                             self.doneOn = True
                             self.doneOff = False
                     except serial.serialutil.SerialException:

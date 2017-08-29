@@ -576,6 +576,9 @@ class Ui_MainWindow(object):
         self.label_6.setFont(font)
         self.label_6.setWordWrap(True)
         self.label_6.setObjectName("label_6")
+        self.unitLEDBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.unitLEDBtn.setGeometry(QtCore.QRect(840, 50, 121, 21))
+        self.unitLEDBtn.setObjectName("unitLEDBtn")
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
@@ -729,4 +732,5 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "Port:"))
         self.portTxt.setText(_translate("MainWindow", "/dev/ttyACM0"))
         self.label_6.setText(_translate("MainWindow", "Now with support for turning on and off at specific times, audio on Windows, a way to make your own modes, and more!"))
+        self.unitLEDBtn.setText(_translate("MainWindow", "Toggle Unit LED"))
 
