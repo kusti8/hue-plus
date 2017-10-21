@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-VERSION="1.4.2"
+VERSION="1.4.3"
 import sys
+import io
+import traceback
 from time import sleep
 import os
 import types
@@ -55,6 +57,7 @@ def main():
     #    sys.exit("You need to have root privileges to run this script.\nPlease try again, this time using 'sudo'.")
     #if not is_admin():
     #    runAsAdmin()
+    sys.excepthook = excepthook
     app = QApplication(sys.argv)
     form = MainWindow()
     form.show()
@@ -734,6 +737,37 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         self.checkAudio()
         self.animatedThread = multiprocessing.Process(target=hue.animated, args=(self.portTxt.text(), self.getChannel(), self.animatedColors, self.animatedSpeed.value()))
         self.animatedThread.start()
+
+
+def excepthook(excType, excValue, tracebackobj):
+    """Rewritten "excepthook" function, to display a message box with details about the exception.
+    @param excType exception type
+    @param excValue exception value
+    @param tracebackobj traceback object
+    """
+    separator = '-' * 40
+    notice = "An unhandled exception has occurred\n"
+
+    tbinfofile = io.StringIO()
+    traceback.print_tb(tracebackobj, None, tbinfofile)
+    tbinfofile.seek(0)
+    tbinfo = tbinfofile.read()
+    errmsg = '%s: \n%s' % (str(excType), str(excValue))
+    sections = [separator, errmsg, separator, tbinfo]
+    msg = '\n'.join(sections)
+
+    # Create a QMessagebox
+    error_box = QMessageBox()
+
+    error_box.setText(str(notice)+str(msg))
+    error_box.setWindowTitle("Hue-plus - unhandled exception")
+    error_box.setIcon(QMessageBox.Critical)
+    error_box.setStandardButtons(QMessageBox.Ok)
+    error_box.setTextInteractionFlags(Qt.TextSelectableByMouse)
+
+    # Show the window
+    error_box.exec_()
+    sys.exit(1)
 
 if __name__ == '__main__':
     main()
