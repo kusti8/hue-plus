@@ -67,5 +67,9 @@ moving | `true` or `false` if alternating looks like it is moving
 state | For power mode, either `'on'` or `'off'`
 mode | For custom mode, either `'fixed'`, `'breathing'`, or `'wave'`
 
+## Notes
+
+Hue-plus does not automatically run on startup. This will not be added as a feature, but you should do this manually if you want that. For windows, follow this: http://www.thewindowsclub.com/make-programs-run-on-startup-windows. For Mac/Linux, use cron.
+
 ## Warning
   I (the author) hold no liability for any broken or not working Hue+ by running this script. It is provided as is. It worked for me, but your milage may vary
