@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION="1.4.3"
+VERSION="1.4.4"
 import sys
 import io
 import traceback
@@ -171,8 +171,6 @@ class MainWindow(QMainWindow, hue_gui.Ui_MainWindow):
         port = self.get_port()
         if port:
             self.portTxt.setText(self.get_port())
-        else:
-            self.error("No Hue+ found.")
 
         self.profileListFunc()
 
