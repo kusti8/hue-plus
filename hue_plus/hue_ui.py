@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-VERSION="1.4.3"
+VERSION="1.4.4"
 import sys
 import io
 import traceback
