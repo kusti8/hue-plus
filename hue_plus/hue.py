@@ -434,7 +434,7 @@ def breathing(ser, gui, channel, color, speed):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    command = create_command(ser, channel, color, "breathing", 0, 0, 0, speed)
+    command = create_command(ser, channel, [color], "breathing", 0, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
     write(ser, outputs)
@@ -447,7 +447,7 @@ def fading(ser, gui, channel, color, speed):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    command = create_command(ser, channel, color, "fading", 0, 0, 0, speed)
+    command = create_command(ser, channel, [color], "fading", 0, 0, 0, speed)
 
     outputs = previous.get_colors(channel, command)
     write(ser, outputs)
@@ -472,7 +472,7 @@ def cover_marquee(ser, gui, channel, color, speed, direction):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    command = create_command(ser, channel, color, "cover_marquee", direction, 0, 0, speed)
+    command = create_command(ser, channel, [color], "cover_marquee", direction, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
     write(ser, outputs)
 
@@ -484,7 +484,7 @@ def pulse(ser, gui, channel, color, speed):
         for i in range(gui):
             color.append(picker.pick("Color "+str(i+1) + " of "+str(gui)))
 
-    command = create_command(ser, channel, color, "pulse", 0, 0, 0, speed)
+    command = create_command(ser, channel, [color], "pulse", 0, 0, 0, speed)
     outputs = previous.get_colors(channel, command)
     write(ser, outputs)
 
@@ -510,7 +510,7 @@ def alternating(ser, gui, channel, color, speed, size, moving, direction):
     else:
         option = 0
 
-    command = create_command(ser, channel, color, "alternating", direction, option, size, speed)
+    command = create_command(ser, channel, [color], "alternating", direction, option, size, speed)
     outputs = previous.get_colors(channel, command)
     write(ser, outputs)
 
